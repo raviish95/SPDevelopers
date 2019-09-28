@@ -31,7 +31,9 @@
         android:layout_alignParentEnd="true"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="27dp"
+        app:backgroundTint="@color/blue"
         android:layout_marginEnd="22dp"
+        android:tint="@color/whiteTextColor"
         app:srcCompat="@android:drawable/ic_input_add"
         tools:layout_editor_absoluteX="328dp"
         tools:layout_editor_absoluteY="448dp" />

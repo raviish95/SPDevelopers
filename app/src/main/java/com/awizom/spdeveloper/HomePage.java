@@ -82,8 +82,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
            // Toast.makeText(this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
         }
 
-
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,8 +91,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 Intent intent = new Intent(HomePage.this, AddClient.class);
                 startActivity(intent);
                 progressDialog.dismiss();
-
-
             }
         });
 

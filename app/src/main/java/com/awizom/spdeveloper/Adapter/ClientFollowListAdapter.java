@@ -30,8 +30,6 @@ import com.awizom.spdeveloper.Model.ClientDetailModel;
 import com.awizom.spdeveloper.R;
 import com.awizom.spdeveloper.SharedPrefManager;
 import com.bumptech.glide.Glide;
-
-
 public class ClientFollowListAdapter extends RecyclerView.Adapter<ClientFollowListAdapter.MyViewHolder> {
 
     ProgressDialog progressDialog;
@@ -54,7 +52,6 @@ public class ClientFollowListAdapter extends RecyclerView.Adapter<ClientFollowLi
         holder.address.setText(c.getAddress());
         holder.date.setText(String.valueOf(c.getCreatedOn().split("T")[0]));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 progressDialog.show();

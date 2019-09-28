@@ -27,6 +27,8 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -69,9 +71,11 @@ public class ClientPropertyDetail extends AppCompatActivity {
     private final static int IMAGE_RESULT = 200;
     private static int TIMER = 300;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
-    EditText propertyname, editTextAddress;
+    EditText  editTextAddress;
+    AutoCompleteTextView propertyname;
     EditText propertyarea;
     List<ClientPropertyModel> clientpropertylist;
+    List<String> propertynamelist;
     ClientPropertyListAdapter clientPropertyListAdapter;
 
     @Override
@@ -118,6 +122,7 @@ public class ClientPropertyDetail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
                 final br.com.simplepass.loading_button_lib.customViews.CircularProgressButton submits;
                 final android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(ClientPropertyDetail.this);
                 LayoutInflater inflater = getLayoutInflater();
@@ -135,6 +140,7 @@ public class ClientPropertyDetail extends AppCompatActivity {
                 });
 
                 submits = dialogView.findViewById(R.id.cirSubmitButton);
+                getPropertyName();
                 submits.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
@@ -192,15 +198,37 @@ public class ClientPropertyDetail extends AppCompatActivity {
                     }
                 });
 
+
                 dialogBuilder.setView(dialogView);
                 dialogView.setBackgroundColor(Color.parseColor("#F0F8FF"));
                 final android.support.v7.app.AlertDialog b = dialogBuilder.create();
 
-
-                b.show();
+                  b.show();
             }
         });
         getCLientdetails();
+    }
+
+    private void getPropertyName() {
+        try {
+            result = new ClientHelper.GetClientPropertyNameList().execute().get();
+            if (result.isEmpty()) {
+                result = new ClientHelper.GetClientPropertyNameList().execute().get();
+            } else {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<String>>() {
+                }.getType();
+                propertynamelist = new Gson().fromJson(result, listType);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                        (this,android.R.layout.select_dialog_item,propertynamelist);
+                propertyname.setThreshold(1);//will start working from first character
+                propertyname.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+                //  Toast.makeText(getApplicationContext(), result + " Success", Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void getpropertylist() {
@@ -215,7 +243,6 @@ public class ClientPropertyDetail extends AppCompatActivity {
                 clientpropertylist = new Gson().fromJson(result, listType);
                 clientPropertyListAdapter = new ClientPropertyListAdapter(ClientPropertyDetail.this, clientpropertylist);
                 recyclerView.setAdapter(clientPropertyListAdapter);
-
                 //  Toast.makeText(getApplicationContext(), result + " Success", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {

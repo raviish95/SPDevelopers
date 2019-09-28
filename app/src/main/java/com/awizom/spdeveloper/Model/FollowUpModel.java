@@ -5,6 +5,8 @@ public class FollowUpModel {
     public int ClientID;
     public int EmployeeID ;
     public  String Name;
+    public String FollowUpMethod ;
+    public String FollowUpDate;
 
     public String getName() {
         return Name;
@@ -54,6 +56,5 @@ public class FollowUpModel {
         FollowUpDate = followUpDate;
     }
 
-    public String FollowUpMethod ;
-    public String FollowUpDate;
+
 }

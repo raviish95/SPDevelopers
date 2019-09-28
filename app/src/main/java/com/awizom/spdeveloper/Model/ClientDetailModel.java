@@ -8,6 +8,8 @@ public class ClientDetailModel {
     public String AltMobNo;
     public String Address;
     public String Email ;
+    public String CreatedBy ;
+    public String CreatedOn;
 
     public int getClientID() {
         return ClientID;
@@ -81,6 +83,5 @@ public class ClientDetailModel {
         CreatedOn = createdOn;
     }
 
-    public String CreatedBy ;
-    public String CreatedOn;
+
 }
