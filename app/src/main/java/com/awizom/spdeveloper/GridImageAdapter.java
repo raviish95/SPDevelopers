@@ -74,35 +74,18 @@ public class GridImageAdapter extends BaseAdapter {
                     Intent intent = new Intent(mContext, FollowUP.class);
                     mContext.startActivity(intent);
                     progressDialog.dismiss();
-                } /*else if (position == 2) {
+                } else if (position == 2) {
                     progressDialog.show();
-                 *//*   Intent intent = new Intent(mContext, MyAccount.class);
-                    mContext.startActivity(intent);*//*
+                    Intent intent = new Intent(mContext, PropertiesActivity.class);
+                    mContext.startActivity(intent);
                     dismissmethod();
                 } else if (position == 3) {
                     progressDialog.show();
-                   *//* Intent intent = new Intent(mContext, MyOrderList.class);
-                    intent.putExtra("Ordertype","ds");
-                    intent.putExtra("HeaderName", "My Job");
-                    mContext.startActivity(intent);*//*
-                    dismissmethod();
+                    Intent intent = new Intent(mContext, AddClient.class);
+                    mContext.startActivity(intent);
+                    progressDialog.dismiss();
                 }
-                else if (position == 4) {
-                    progressDialog.show();
-                 *//*   Intent intent = new Intent(mContext, UnapprovedOrdersList.class);
-                    intent.putExtra("Ordertype","ds");
-                    intent.putExtra("HeaderName", "Pending order's design");
-                    mContext.startActivity(intent);*//*
-                    dismissmethod();
-                }
-                else if (position == 5) {
-                    progressDialog.show();
-                  *//*  Intent intent = new Intent(mContext, TodayDispatchOrder.class);
-                    intent.putExtra("Ordertype", "TodayDispatch");
-                    intent.putExtra("HeaderName", "Today Dispatch");
-                    mContext.startActivity(intent);*//*
-                    dismissmethod();
-                }*/
+
             }
         });
         return convertView;
@@ -122,10 +105,10 @@ public class GridImageAdapter extends BaseAdapter {
 
     // Keep all Images in array
     public Integer[] mThumbIds = {
-            R.drawable.leads, R.drawable.follow
+            R.drawable.leads, R.drawable.follow,R.drawable.properties,R.drawable.add_client
     };
     public String[] imagename = {
-            "Lead History", "Follow up"
+            "Lead History", "Follow up", "Properties", "Add Client"
     };
 
 }

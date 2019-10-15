@@ -30,7 +30,7 @@ public class ClientHistory extends AppCompatActivity {
     ProgressDialog progressDialog;
     Spinner leadfilt;
     String[] leads = {"Highest", "Lowest"};
-    String leadfilter = "";
+    String leadfilter = "Highest";
     EditText location, client, mobno;
     br.com.simplepass.loading_button_lib.customViews.CircularProgressButton filterbutton;
     String lct = "null";
@@ -61,7 +61,7 @@ public class ClientHistory extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        leadfilt = (Spinner) findViewById(R.id.spinner);
+      /*  leadfilt = (Spinner) findViewById(R.id.spinner);*/
         location = findViewById(R.id.location);
         client = findViewById(R.id.client);
         mobno = findViewById(R.id.mobno);
@@ -72,15 +72,15 @@ public class ClientHistory extends AppCompatActivity {
                 getClientFilterList();
             }
         });
-        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, leads);
+     /*   ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, leads);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        leadfilt.setAdapter(aa);
+        leadfilt.setAdapter(aa);*/
         recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.scrollToPosition(0);
         recyclerView.smoothScrollToPosition(0);
-        leadfilt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+     /*   leadfilt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
               //  Toast.makeText(getApplicationContext(), leads[position], Toast.LENGTH_LONG).show();
@@ -91,7 +91,7 @@ public class ClientHistory extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
         getClientlist();
 
     }

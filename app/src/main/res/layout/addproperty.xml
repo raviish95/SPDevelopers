@@ -82,7 +82,6 @@
                             android:id="@+id/editTextPropertyArea"
                             style="@style/modifiedEditText"
                             android:hint="Property Area"
-
                             android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>
 

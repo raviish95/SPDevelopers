@@ -22,20 +22,53 @@
 
     <include layout="@layout/content_home_page" />
 
+    <RelativeLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="27dp"
-        app:backgroundTint="@color/blue"
-        android:layout_marginEnd="22dp"
-        android:tint="@color/whiteTextColor"
-        app:srcCompat="@android:drawable/ic_input_add"
-        tools:layout_editor_absoluteX="328dp"
-        tools:layout_editor_absoluteY="448dp" />
+        <FrameLayout
+            android:id="@+id/home_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:background="@color/colorPrimary" />
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="27dp"
+            app:backgroundTint="@color/blue"
+            android:layout_marginEnd="22dp"
+            android:tint="@color/whiteTextColor"
+            app:srcCompat="@android:drawable/ic_input_add"
+            tools:layout_editor_absoluteX="328dp"
+            tools:layout_editor_absoluteY="448dp" />
+
+        <RelativeLayout
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimary"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/footer_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:autoLink="web"
+                android:gravity="start"
+                android:linksClickable="true"
+                android:text="http://spweb.jihuzzur.com/"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp" />
+        </RelativeLayout>
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

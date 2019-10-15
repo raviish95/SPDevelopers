@@ -71,7 +71,7 @@
                             android:id="@+id/editTextName"
                             style="@style/modifiedEditText"
                             android:hint="Name"
-                            android:inputType="textPersonName"
+                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                             android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>
 

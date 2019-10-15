@@ -122,7 +122,6 @@ public class ClientPropertyDetail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
                 final br.com.simplepass.loading_button_lib.customViews.CircularProgressButton submits;
                 final android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(ClientPropertyDetail.this);
                 LayoutInflater inflater = getLayoutInflater();

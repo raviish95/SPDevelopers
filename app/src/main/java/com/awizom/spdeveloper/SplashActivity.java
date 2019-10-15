@@ -21,8 +21,8 @@ public class SplashActivity extends AppCompatActivity {
 
     private void initView() {
         RelativeLayout relativeLayout=findViewById(R.id.rel3);
-        TransitionDrawable trans = (TransitionDrawable) relativeLayout.getBackground();
-        trans.startTransition(4000);
+      /*  TransitionDrawable trans = (TransitionDrawable) relativeLayout.getBackground();
+        trans.startTransition(4000);*/
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -65,4 +65,7 @@ dependencies {
     //animated button for login
     implementation 'br.com.simplepass:loading-button-android:1.14.0'
     implementation 'com.commit451:PhotoView:1.2.4'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
+    implementation 'net.colindodd:gradientlayout:1.2'
+
 }

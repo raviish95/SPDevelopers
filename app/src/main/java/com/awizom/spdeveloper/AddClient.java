@@ -55,32 +55,53 @@ public class AddClient extends AppCompatActivity {
     }
 
     private void addclient() {
+        String emailPattern = "[a-zA-Z0-9+._%-+]{1,256}" +
+                "@" +
+                "[a-zA-Z0-9][a-zA-Z0-9-]{0,64}" +
+                "(" +
+                "." +
+                "[a-zA-Z0-9][a-zA-Z0-9-]{0,25}" +
+                ")+";
         if (name.getText().toString().isEmpty()) {
             name.setError("Please enter valid Name");
             name.requestFocus();
-        } else if (email.getText().toString().isEmpty()) {
+        } else if (email.getText().toString().isEmpty() || (!email.getText().toString().matches(emailPattern))) {
             email.setError("Please enter valid Email");
             email.requestFocus();
-        } else if (mobno.getText().toString().isEmpty()) {
+        } else if (mobno.getText().toString().isEmpty() ||mobno.getText().toString().length()< 10 || mobno.getText().toString().length()> 10) {
             mobno.setError("Please enter valid Mobno");
             mobno.requestFocus();
-        } else if (altmobno.getText().toString().isEmpty()) {
+        } else if (altmobno.getText().toString().isEmpty()||altmobno.getText().toString().length()< 10 || altmobno.getText().toString().length()> 10) {
             altmobno.setError("Please enter valid alt mobno");
             altmobno.requestFocus();
         } else if (address.getText().toString().isEmpty()) {
             address.setError("Please enter valid Address");
             address.requestFocus();
-        } else {
+        }
+        else if(mobno.getText().toString().equals(altmobno.getText().toString()))
+        {
+
+            altmobno.setError("Please enter different alt mobno");
+            altmobno.requestFocus();
+        }
+
+        else {
           /*  progressDialog.setMessage("Please wait");
             progressDialog.show();*/
             submit.startAnimation();
             try {
                 result = new ClientHelper.AddClient().execute(name.getText().toString(), email.getText().toString(), mobno.getText().toString(), altmobno.getText().toString(), address.getText().toString(), empid.toString()).get();
                 if (result.isEmpty()) {
-
                     result = new ClientHelper.AddClient().execute(name.getText().toString(), email.getText().toString(), mobno.getText().toString(), altmobno.getText().toString(), address.getText().toString(), empid.toString()).get();
-                } else {
-                    Toast.makeText(getApplicationContext(), result + " Success", Toast.LENGTH_LONG).show();
+                }
+                else if(result.equals("100"))
+                {
+
+                    Toast.makeText(getApplicationContext(), "EmailID or mobile no is already registered", Toast.LENGTH_LONG).show();
+                    submit.revertAnimation();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), " Success", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(AddClient.this, ClientPropertyDetail.class);
                     intent.putExtra("ClientID", String.valueOf(result));
                     startActivity(intent);
