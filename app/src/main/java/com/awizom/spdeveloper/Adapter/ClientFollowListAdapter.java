@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.awizom.spdeveloper.AddClient;
 import com.awizom.spdeveloper.ClientPropertyDetail;
+import com.awizom.spdeveloper.FollowUpHistory;
 import com.awizom.spdeveloper.Helper.ClientHelper;
 import com.awizom.spdeveloper.Model.ClientDetailModel;
 import com.awizom.spdeveloper.R;
@@ -91,14 +92,16 @@ public class ClientFollowListAdapter extends RecyclerView.Adapter<ClientFollowLi
         try {
             result = new ClientHelper.AddFollowUp().execute(clientid.toString(), empid.toString()).get();
             if (result.isEmpty()) {
-
                 result = new ClientHelper.AddFollowUp().execute(clientid.toString(), empid.toString()).get();
+
             } else {
                 Toast.makeText(mCtx, "Successfully followed", Toast.LENGTH_LONG).show();
-               /* Intent intent = new Intent(AddClient.this, ClientPropertyDetail.class);
+                Intent intent = new Intent(mCtx, FollowUpHistory.class);
                 intent.putExtra("ClientID", String.valueOf(result));
-                startActivity(intent);*/
+                mCtx.startActivity(intent);
+
                 progressDialog.dismiss();
+
             }
         } catch (Exception e) {
             e.printStackTrace();

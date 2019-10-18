@@ -493,4 +493,50 @@ public class ClientHelper extends AppCompatActivity {
         }
 
     }
+    public static final class EditFollowUp extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+
+            //     InputStream inputStream
+
+            String followupid = params[0];
+            String feedbcktext = params[1];
+
+            String json = "";
+            try {
+
+                OkHttpClient client = new OkHttpClient();
+                Request.Builder builder = new Request.Builder();
+                builder.url(AppConfig.BASE_URL_API_ + "EditFollowUp");
+                builder.addHeader("Content-Type", "application/x-www-form-urlencoded");
+                builder.addHeader("Accept", "application/json");
+                //builder.addHeader("Authorization", "Bearer " + accesstoken);
+                FormBody.Builder parameters = new FormBody.Builder();
+                parameters.add("FollowUpID", followupid);
+                parameters.add("Feedback", feedbcktext);
+
+                builder.post(parameters.build());
+                okhttp3.Response response = client.newCall(builder.build()).execute();
+                if (response.isSuccessful()) {
+                    json = response.body().string();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return json;
+        }
+
+        protected void onPostExecute(String result) {
+
+            if (result.isEmpty()) {
+
+            } else {
+                super.onPostExecute(result);
+//
+            }
+
+
+        }
+
+    }
 }

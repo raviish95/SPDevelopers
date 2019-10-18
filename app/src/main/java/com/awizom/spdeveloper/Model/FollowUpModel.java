@@ -8,6 +8,15 @@ public class FollowUpModel {
     public String FollowUpMethod ;
     public String FollowUpDate;
 
+    public String getFeedback() {
+        return Feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        Feedback = feedback;
+    }
+
+    public String Feedback ;
     public String getName() {
         return Name;
     }

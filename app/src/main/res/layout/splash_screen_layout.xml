@@ -22,6 +22,7 @@
             android:layout_gravity="center_horizontal"
             android:src="@drawable/sp_quotes" />
 
+
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/imgLogo"
             android:layout_width="300dp"

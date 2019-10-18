@@ -22,7 +22,6 @@
             android:id="@+id/product_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:orientation="vertical">
 
             <LinearLayout
@@ -113,6 +112,16 @@
                     android:textColor="@color/fui_bgFacebook"
                     android:textSize="14sp"
                     android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/feedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:text="Feedback"
+                    android:textSize="14sp" />
+
             </LinearLayout>
         </LinearLayout>
 

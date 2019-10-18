@@ -26,4 +26,5 @@
     <color name="gradientOrange3">#F7A23C</color>
     <color name="gradientLightBlue">#376DF6</color>
     <color name="gradientLightGreen">#21E8AC</color>
+    <color name="red">#FF0000</color>
 </resources>
