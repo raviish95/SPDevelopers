@@ -126,8 +126,8 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 //   progressDialog.dismiss();
                                 login.revertAnimation();
-                                editUserName.setError("UserId or Password is Wrong");
-                                password.setError("UserId or Password is Wrong");
+                                editUserName.setError("Wrong UserId or Password");
+                                password.setError("Wrong UserId or Password");
                             }
                         }
                     } catch (Exception e) {

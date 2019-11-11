@@ -72,7 +72,7 @@
                     android:layout_weight="1"
                     android:gravity="left"
                     android:text="Property Area"
-
+                    android:textColor="@color/black"
                     android:textSize="14sp"
                     android:textStyle="normal"
                     android:fontFamily="serif"
@@ -87,6 +87,7 @@
                     android:layout_weight="1"
                     android:gravity="left"
                     android:text="Created On"
+                    android:textColor="@color/black"
                     android:textSize="13sp"
                     android:fontFamily="serif"
                     android:padding="4dp" />
@@ -99,6 +100,7 @@
                     android:layout_weight="1"
                     android:gravity="left"
                     android:text="Address"
+                    android:textColor="@color/blue"
                     android:textSize="13sp"
                     android:fontFamily="serif"
                     android:padding="4dp" />

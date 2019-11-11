@@ -23,8 +23,8 @@
             android:icon="@drawable/ic_record_voice_over_black_24dp"
             android:title="Follow Up History" />
 
-    </group>
 
+    </group>
 
 
 </menu>

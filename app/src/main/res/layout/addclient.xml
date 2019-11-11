@@ -70,8 +70,8 @@
                         <EditText
                             android:id="@+id/editTextName"
                             style="@style/modifiedEditText"
-                            android:hint="Name"
                             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                            android:hint="Name"
                             android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>
 

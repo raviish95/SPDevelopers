@@ -46,7 +46,7 @@ public class PropertyListAdapter extends RecyclerView.Adapter<PropertyListAdapte
         holder.pname.setText(String.valueOf(c.getPropertyName()));
         holder.property_area.setText(String.valueOf(c.getPropertyArea()));
         holder.address.setText(String.valueOf(c.getAddress()));
-        holder.createdon.setText(String.valueOf(c.getCreatedOn()));
+        holder.createdon.setText(String.valueOf(c.getCreatedOn().split("T")[0]));
         holder.img_link.setText(String.valueOf(AppConfig.BASE_URL +c.getPhoto().toString()));
         try {
             Glide.with(mCtx).load(AppConfig.BASE_URL + c.getPhoto().toString()).into(holder.propertyImage);
