@@ -102,6 +102,8 @@
                         android:id="@+id/imagesrc"
                         android:layout_width="250dp"
                         android:layout_height="250dp"
+                        android:screenOrientation="portrait"
+                        android:configChanges="orientation|keyboardHidden"
                         android:layout_gravity="center_horizontal"
                         android:src="@drawable/upload_property" />
 

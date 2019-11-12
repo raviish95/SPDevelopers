@@ -1,16 +1,23 @@
 package com.awizom.spdeveloper;
 
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -79,6 +86,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         });
         if(new InternetDialog(this).getInternetStatus()){
             getClientList();
+            GetCheckFollowList();
            // Toast.makeText(this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
         }
 
@@ -103,6 +111,57 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+    private void GetCheckFollowList() {
+
+        String empid = String.valueOf(SharedPrefManager.getInstance(this).getUser().getEmployeeID());
+        try {
+            // Toast.makeText(getApplicationContext(), "deviceid->" + FirebaseInstanceId.getInstance().getToken(), Toast.LENGTH_LONG).show();
+            String result = new ClientHelper.GetCheckFollowList().execute(empid.toString()).get();
+            if(result.isEmpty())
+            {
+                result = new ClientHelper.GetCheckFollowList().execute(empid.toString()).get();
+
+            }
+            else {
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<ClientDetailModel>>() {
+                }.getType();
+                clientlist = new Gson().fromJson(result, listType);
+
+           for(int i=0;i<clientlist.size();i++) {
+               final Intent emptyIntent = new Intent(HomePage.this, FollowUP.class);
+               NotificationManager notificationManager = (NotificationManager) HomePage.this.getSystemService(Context.NOTIFICATION_SERVICE);
+               String channelId = "channel-01";
+               String channelName = "Channel Name";
+               int importance = NotificationManager.IMPORTANCE_HIGH;
+               if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                   NotificationChannel mChannel = new NotificationChannel(
+                           channelId, channelName, importance);
+                   notificationManager.createNotificationChannel(mChannel);
+               }
+               Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+               NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(HomePage.this, channelId)
+                       .setSmallIcon(R.drawable.sp_logo)
+                       .setContentTitle("Hey! "+clientlist.get(i).getName()+" is going down in follow up")
+                       .setSound(uri)
+                       .setContentText(String.valueOf("SpDeveloper,Follow Now!"));
+
+               TaskStackBuilder stackBuilder = TaskStackBuilder.create(HomePage.this);
+               /*   stackBuilder.addNextIntent(intent);*/
+               PendingIntent pendingIntent = PendingIntent.getActivity(HomePage.this, 0, emptyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+               mBuilder.setContentIntent(pendingIntent);
+
+               notificationManager.notify(i, mBuilder.build());
+
+           }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void checkInternet() {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -124,10 +183,10 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         String empid = String.valueOf(SharedPrefManager.getInstance(this).getUser().getEmployeeID());
         try {
             // Toast.makeText(getApplicationContext(), "deviceid->" + FirebaseInstanceId.getInstance().getToken(), Toast.LENGTH_LONG).show();
-            String result = new ClientHelper.GetClientList().execute(empid.toString()).get();
+            String result = new ClientHelper.GetClientFollowList().execute(empid.toString()).get();
             if(result.isEmpty())
             {
-                result = new ClientHelper.GetClientList().execute(empid.toString()).get();
+                result = new ClientHelper.GetClientFollowList().execute(empid.toString()).get();
 
             }
             else {

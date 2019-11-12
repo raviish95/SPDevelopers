@@ -66,7 +66,6 @@ public class ClientPropertyListAdapter extends RecyclerView.Adapter<ClientProper
     private void openZommImage(String imagelinkid, Context mCtx) {
 
         final android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(mCtx);
-
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         String image = imagelinkid;
         final View dialogView = inflater.inflate(R.layout.image_view_alert, null);

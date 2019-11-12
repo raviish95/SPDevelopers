@@ -58,7 +58,6 @@
                 android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
-
                 <ImageView
                     android:id="@+id/no_internet"
                     android:layout_width="match_parent"
@@ -78,7 +77,8 @@
                     android:id="@+id/recyclerview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="70dp">
 
                 </android.support.v7.widget.RecyclerView>
 

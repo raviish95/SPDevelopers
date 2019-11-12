@@ -1,6 +1,7 @@
 package com.awizom.spdeveloper;
 
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -13,6 +14,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -24,6 +27,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -46,6 +50,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +100,8 @@ public class ClientPropertyDetail extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+               Intent intent =new Intent(ClientPropertyDetail.this,HomePage.class);
+               startActivity(intent);
             }
         });
         name = findViewById(R.id.name);
@@ -118,6 +124,7 @@ public class ClientPropertyDetail extends AppCompatActivity {
         recyclerView.scrollToPosition(0);
         recyclerView.smoothScrollToPosition(0);
         getpropertylist();
+
         addProperty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,6 +215,15 @@ public class ClientPropertyDetail extends AppCompatActivity {
         getCLientdetails();
     }
 
+    @SuppressLint("ResourceType")
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+          Intent intent=new Intent(this,HomePage.class);
+          startActivity(intent);
+        }
+        return super.onKeyDown(keyCode, event);
+    }
     private void getPropertyName() {
         try {
             result = new ClientHelper.GetClientPropertyNameList().execute().get();
@@ -254,7 +270,9 @@ public class ClientPropertyDetail extends AppCompatActivity {
         outputFileUri = getCaptureImageOutputUri();
         List<Intent> allIntents = new ArrayList<>();
         PackageManager packageManager = getPackageManager();
+
         Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
         List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
         for (ResolveInfo res : listCam) {
             Intent intent = new Intent(captureIntent);
@@ -265,6 +283,7 @@ public class ClientPropertyDetail extends AppCompatActivity {
             }
             allIntents.add(intent);
         }
+
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
         List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
@@ -304,12 +323,40 @@ public class ClientPropertyDetail extends AppCompatActivity {
             email.setText(accountName);
         }
 
-
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == IMAGE_RESULT) {
                 String filePath = getImageFilePath(data);
+                ExifInterface ei = null;
+                try {
+                    ei = new ExifInterface(filePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_UNDEFINED);
+
+
                 if (filePath != null) {
                     Bitmap selectedImage = BitmapFactory.decodeFile(filePath);
+
+                    switch(orientation) {
+
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            selectedImage = rotateImage(selectedImage, 90);
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            selectedImage = rotateImage(selectedImage, 180);
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            selectedImage = rotateImage(selectedImage, 270);
+                            break;
+
+                        case ExifInterface.ORIENTATION_NORMAL:
+                        default:
+                            selectedImage = selectedImage;
+                    }
                     if (Check == "Image") {
                         imageView.setImageBitmap(selectedImage);
                     } else {
@@ -318,6 +365,12 @@ public class ClientPropertyDetail extends AppCompatActivity {
                 }
             }
         }
+    }
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 
     private String getImageFromFilePath(Intent data) {

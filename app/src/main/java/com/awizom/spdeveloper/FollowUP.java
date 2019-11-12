@@ -100,7 +100,7 @@ public class FollowUP extends AppCompatActivity {
         String empid = String.valueOf(SharedPrefManager.getInstance(this).getUser().getEmployeeID());
         try {
             // Toast.makeText(getApplicationContext(), "deviceid->" + FirebaseInstanceId.getInstance().getToken(), Toast.LENGTH_LONG).show();
-            String result = new ClientHelper.GetClientList().execute(empid.toString()).get();
+            String result = new ClientHelper.GetClientFollowList().execute(empid.toString()).get();
             Gson gson = new Gson();
             Type listType = new TypeToken<List<ClientDetailModel>>() {
             }.getType();
