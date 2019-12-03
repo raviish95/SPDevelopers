@@ -3,6 +3,7 @@ package com.awizom.spdeveloper;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -46,6 +47,8 @@ public class AddClient extends AppCompatActivity {
         address = findViewById(R.id.editTextAddress);
         submit = findViewById(R.id.cirSubmitButton);
         progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +91,7 @@ public class AddClient extends AppCompatActivity {
         else {
           /*  progressDialog.setMessage("Please wait");
             progressDialog.show();*/
+            showCustomLoadingDialog();
             submit.startAnimation();
             try {
                 result = new ClientHelper.AddClient().execute(name.getText().toString(), email.getText().toString(), mobno.getText().toString(), altmobno.getText().toString(), address.getText().toString(), empid.toString()).get();
@@ -112,5 +116,20 @@ public class AddClient extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void showCustomLoadingDialog() {
+
+        //..show gif
+        progressDialog.show();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //...here i'm waiting 5 seconds before hiding the custom dialog
+                //...you can do whenever you want or whenever your work is done
+                progressDialog.dismiss();
+            }
+        }, 1000);
     }
 }

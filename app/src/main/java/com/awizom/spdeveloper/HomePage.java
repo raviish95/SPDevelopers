@@ -1,5 +1,6 @@
 package com.awizom.spdeveloper;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -15,12 +16,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -178,6 +181,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         }
     }
+
     private void getClientList() {
 
         String empid = String.valueOf(SharedPrefManager.getInstance(this).getUser().getEmployeeID());
@@ -212,6 +216,32 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
+    @SuppressLint("ResourceType")
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            final AlertDialog.Builder alertbox = new AlertDialog.Builder(HomePage.this);//R.style.AlertDialogTheme (Sakshee change alert)
+            alertbox.setIcon(R.drawable.close_blue);
+            alertbox.setIconAttribute(90);
+            alertbox.setTitle("Do You Want To Exit ?");
+            alertbox.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    // finish used for destroyed activity
+                    finishAffinity();
+                    System.exit(0);
+                }
+            });
+
+            alertbox.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface arg0, int arg1) {
+                    // Nothing will be happened when clicked on no button
+                    // of Dialog
+                }
+            });
+            alertbox.show();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -228,7 +258,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-
 
             AlertDialog.Builder alertbox = new AlertDialog.Builder(HomePage.this);
             alertbox.setCancelable(false);
@@ -268,7 +297,20 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         return super.onOptionsItemSelected(item);
     }
+    public void showCustomLoadingDialog() {
 
+        //..show gif
+        progressDialog.show();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //...here i'm waiting 5 seconds before hiding the custom dialog
+                //...you can do whenever you want or whenever your work is done
+                progressDialog.dismiss();
+            }
+        }, 1000);
+    }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -276,30 +318,26 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         int id = item.getItemId();
 
         if (id == R.id.nav_lead) {
-            progressDialog.show();
+            showCustomLoadingDialog();
             Intent intent = new Intent(this, ClientHistory.class);
             startActivity(intent);
 
-            progressDialog.dismiss();
+
             // Handle the camera action
         } else if (id == R.id.nav_follow) {
-            progressDialog.show();
+
             Intent intent = new Intent(this, FollowUP.class);
             startActivity(intent);
-            progressDialog.dismiss();
 
         } else if (id == R.id.nav_addlead) {
-            progressDialog.setMessage("Please wait");
-            progressDialog.show();
+            showCustomLoadingDialog();
             Intent intent = new Intent(HomePage.this, AddClient.class);
             startActivity(intent);
-            progressDialog.dismiss();
+
         } else if (id == R.id.nav_followhistory) {
-            progressDialog.setMessage("Please wait");
-            progressDialog.show();
+            showCustomLoadingDialog();
             Intent intent = new Intent(HomePage.this, FollowUpHistory.class);
             startActivity(intent);
-            progressDialog.dismiss();
 
         }
 

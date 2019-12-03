@@ -62,15 +62,12 @@ public class ProfileHelper extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             //     InputStream inputStream
-
-
             String name = params[0];
             String email = params[1];
             String mobno = params[2];
             String altmobno = params[3];
             String address = params[4];
             String regtype = params[5];
-
             String json = "";
             try {
 
@@ -87,7 +84,6 @@ public class ProfileHelper extends AppCompatActivity {
                 parameters.add("Address", address);
                 parameters.add("MobNo", mobno);
                 parameters.add("RegType", regtype);
-
 
                 builder.post(parameters.build());
                 okhttp3.Response response = client.newCall(builder.build()).execute();

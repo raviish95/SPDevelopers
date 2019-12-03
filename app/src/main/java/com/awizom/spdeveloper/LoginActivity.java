@@ -77,8 +77,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initview() {
         progressDialog = new ProgressDialog(this);
-
-
         editUserName = findViewById(R.id.editUserName);
         password = findViewById(R.id.editTextPassword);
         login = findViewById(R.id.cirLoginButton);
