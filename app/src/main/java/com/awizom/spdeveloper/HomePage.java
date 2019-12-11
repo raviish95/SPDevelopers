@@ -76,21 +76,21 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.scrollToPosition(0);
         recyclerView.smoothScrollToPosition(0);
-        refresh=findViewById(R.id.swipeRefreshLayout);
+        refresh = findViewById(R.id.swipeRefreshLayout);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(new InternetDialog(HomePage.this).getInternetStatus()){
+                if (new InternetDialog(HomePage.this).getInternetStatus()) {
                     getClientList();
-                 //   Toast.makeText(HomePage.this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
+                    //   Toast.makeText(HomePage.this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
                 }
                 refresh.setRefreshing(false);
             }
         });
-        if(new InternetDialog(this).getInternetStatus()){
+        if (new InternetDialog(this).getInternetStatus()) {
             getClientList();
             GetCheckFollowList();
-           // Toast.makeText(this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -121,43 +121,41 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         try {
             // Toast.makeText(getApplicationContext(), "deviceid->" + FirebaseInstanceId.getInstance().getToken(), Toast.LENGTH_LONG).show();
             String result = new ClientHelper.GetCheckFollowList().execute(empid.toString()).get();
-            if(result.isEmpty())
-            {
+            if (result.isEmpty()) {
                 result = new ClientHelper.GetCheckFollowList().execute(empid.toString()).get();
 
-            }
-            else {
+            } else {
                 Gson gson = new Gson();
                 Type listType = new TypeToken<List<ClientDetailModel>>() {
                 }.getType();
                 clientlist = new Gson().fromJson(result, listType);
 
-           for(int i=0;i<clientlist.size();i++) {
-               final Intent emptyIntent = new Intent(HomePage.this, FollowUP.class);
-               NotificationManager notificationManager = (NotificationManager) HomePage.this.getSystemService(Context.NOTIFICATION_SERVICE);
-               String channelId = "channel-01";
-               String channelName = "Channel Name";
-               int importance = NotificationManager.IMPORTANCE_HIGH;
-               if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                   NotificationChannel mChannel = new NotificationChannel(
-                           channelId, channelName, importance);
-                   notificationManager.createNotificationChannel(mChannel);
-               }
-               Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-               NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(HomePage.this, channelId)
-                       .setSmallIcon(R.drawable.sp_logo)
-                       .setContentTitle("Hey! "+clientlist.get(i).getName()+" is going down in follow up")
-                       .setSound(uri)
-                       .setContentText(String.valueOf("SpDeveloper,Follow Now!"));
+                for (int i = 0; i < clientlist.size(); i++) {
+                    final Intent emptyIntent = new Intent(HomePage.this, FollowUP.class);
+                    NotificationManager notificationManager = (NotificationManager) HomePage.this.getSystemService(Context.NOTIFICATION_SERVICE);
+                    String channelId = "channel-01";
+                    String channelName = "Channel Name";
+                    int importance = NotificationManager.IMPORTANCE_HIGH;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        NotificationChannel mChannel = new NotificationChannel(
+                                channelId, channelName, importance);
+                        notificationManager.createNotificationChannel(mChannel);
+                    }
+                    Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(HomePage.this, channelId)
+                            .setSmallIcon(R.drawable.sp_logo)
+                            .setContentTitle("Hey! " + clientlist.get(i).getName() + " is going down in follow up")
+                            .setSound(uri)
+                            .setContentText(String.valueOf("SpDeveloper,Follow Now!"));
 
-               TaskStackBuilder stackBuilder = TaskStackBuilder.create(HomePage.this);
-               /*   stackBuilder.addNextIntent(intent);*/
-               PendingIntent pendingIntent = PendingIntent.getActivity(HomePage.this, 0, emptyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-               mBuilder.setContentIntent(pendingIntent);
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(HomePage.this);
+                    /*   stackBuilder.addNextIntent(intent);*/
+                    PendingIntent pendingIntent = PendingIntent.getActivity(HomePage.this, 0, emptyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    mBuilder.setContentIntent(pendingIntent);
 
-               notificationManager.notify(i, mBuilder.build());
+                    notificationManager.notify(i, mBuilder.build());
 
-           }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -188,12 +186,10 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         try {
             // Toast.makeText(getApplicationContext(), "deviceid->" + FirebaseInstanceId.getInstance().getToken(), Toast.LENGTH_LONG).show();
             String result = new ClientHelper.GetClientFollowList().execute(empid.toString()).get();
-            if(result.isEmpty())
-            {
+            if (result.isEmpty()) {
                 result = new ClientHelper.GetClientFollowList().execute(empid.toString()).get();
 
-            }
-            else {
+            } else {
                 Gson gson = new Gson();
                 Type listType = new TypeToken<List<ClientDetailModel>>() {
                 }.getType();
@@ -201,7 +197,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 adapterClientList = new ClientListAdapter(HomePage.this, clientlist);
                 recyclerView.setAdapter(adapterClientList);
             }
-            } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -242,6 +238,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         }
         return super.onKeyDown(keyCode, event);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -297,6 +294,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
 
         return super.onOptionsItemSelected(item);
     }
+
     public void showCustomLoadingDialog() {
 
         //..show gif
@@ -311,6 +309,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             }
         }, 1000);
     }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

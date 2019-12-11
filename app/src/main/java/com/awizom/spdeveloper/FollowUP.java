@@ -35,7 +35,6 @@ public class FollowUP extends AppCompatActivity {
         setContentView(R.layout.activity_follow_up);
         if(new InternetDialog(FollowUP.this).getInternetStatus()){
             InitView();
-            //   Toast.makeText(HomePage.this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -46,7 +45,7 @@ public class FollowUP extends AppCompatActivity {
         toolbar.setBackgroundColor(Color.parseColor("#488586"));
         toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

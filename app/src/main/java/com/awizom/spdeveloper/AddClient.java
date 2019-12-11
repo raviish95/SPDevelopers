@@ -31,7 +31,7 @@ public class AddClient extends AppCompatActivity {
         toolbar.setTitle("Add Client");
         toolbar.setBackgroundColor(Color.parseColor("#488586"));
         toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
-        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +58,7 @@ public class AddClient extends AppCompatActivity {
     }
 
     private void addclient() {
+        showCustomLoadingDialog();
         String emailPattern = "[a-zA-Z0-9+._%-+]{1,256}" +
                 "@" +
                 "[a-zA-Z0-9][a-zA-Z0-9-]{0,64}" +
@@ -68,22 +69,12 @@ public class AddClient extends AppCompatActivity {
         if (name.getText().toString().isEmpty()) {
             name.setError("Please enter valid Name");
             name.requestFocus();
-        } else if (email.getText().toString().isEmpty() || (!email.getText().toString().matches(emailPattern))) {
-            email.setError("Please enter valid Email");
-            email.requestFocus();
         } else if (mobno.getText().toString().isEmpty() ||mobno.getText().toString().length()< 10 || mobno.getText().toString().length()> 10) {
             mobno.setError("Please enter valid Mobno");
             mobno.requestFocus();
-        } else if (altmobno.getText().toString().isEmpty()||altmobno.getText().toString().length()< 10 || altmobno.getText().toString().length()> 10) {
-            altmobno.setError("Please enter valid alt mobno");
-            altmobno.requestFocus();
-        } else if (address.getText().toString().isEmpty()) {
-            address.setError("Please enter valid Address");
-            address.requestFocus();
         }
         else if(mobno.getText().toString().equals(altmobno.getText().toString()))
         {
-
             altmobno.setError("Please enter different alt mobno");
             altmobno.requestFocus();
         }
@@ -100,7 +91,6 @@ public class AddClient extends AppCompatActivity {
                 }
                 else if(result.equals("100"))
                 {
-
                     Toast.makeText(getApplicationContext(), "EmailID or mobile no is already registered", Toast.LENGTH_LONG).show();
                     submit.revertAnimation();
                 }
@@ -126,9 +116,12 @@ public class AddClient extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 //...here i'm waiting 5 seconds before hiding the custom dialog
                 //...you can do whenever you want or whenever your work is done
-                progressDialog.dismiss();
+                if (!AddClient.this.isFinishing() && progressDialog != null) {
+                    progressDialog.dismiss();
+                }
             }
         }, 1000);
     }

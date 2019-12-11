@@ -33,8 +33,6 @@ public class RegisterActivity extends AppCompatActivity {
             InitView();
             //   Toast.makeText(HomePage.this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     private void InitView() {
@@ -76,10 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if ((mobno.getText().toString().isEmpty()) || mobno.getText().toString().length()<10 || mobno.getText().toString().length()>10) {
                     mobno.setError("Please Enter valid mobno");
                     mobno.requestFocus();
-                } else if ((altmobno.getText().toString().isEmpty())|| mobno.getText().toString().length()<10 || mobno.getText().toString().length()>10) {
-                    altmobno.setError("Please Enter valid Mob no");
-                    altmobno.requestFocus();
-                } else if (address.getText().toString().isEmpty()) {
+                }  else if (address.getText().toString().isEmpty()) {
                     address.setError("Please Enter valid Address");
                     address.requestFocus();
                 } else {

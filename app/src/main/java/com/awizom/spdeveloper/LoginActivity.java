@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     br.com.simplepass.loading_button_lib.customViews.CircularProgressButton login;
     private AlertDialog progressDialog;
     String result = "";
-    ViewDialog viewDialog;
+    ProgressDialog viewDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +80,13 @@ public class LoginActivity extends AppCompatActivity {
         editUserName = findViewById(R.id.editUserName);
         password = findViewById(R.id.editTextPassword);
         login = findViewById(R.id.cirLoginButton);
-        viewDialog = new ViewDialog((Activity) LoginActivity.this);
+        viewDialog = new ProgressDialog(this);
+        viewDialog.setMessage("Please wait...");
+        viewDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showCustomLoadingDialog();
                 if (editUserName.getText().toString().isEmpty() || editUserName.getText().toString().contains(" ")) {
                     progressDialog.dismiss();
                     editUserName.setError("Please Enter valid UserName");
@@ -101,13 +104,11 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Invalid request", Toast.LENGTH_SHORT).show();
                             result = new ProfileHelper.LogIn().execute(editUserName.getText().toString(), password.getText().toString()).get();
                         } else {
-
                             Gson gson = new Gson();
                             Type listType = new TypeToken<LoginModel>() {
                             }.getType();
                             LoginModel loginModel = new Gson().fromJson(result, listType);
                             String empid = String.valueOf(loginModel.getEmployeeID());
-
                             if (!empid.equals("0")) {
                                 String userID = loginModel.getUserID().toString();
                                 LoginModel loginModel1 = new LoginModel();
@@ -137,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showCustomLoadingDialog() {
-        viewDialog.showDialog();
+        viewDialog.show();
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -145,7 +146,9 @@ public class LoginActivity extends AppCompatActivity {
             public void run() {
                 //...here i'm waiting 5 seconds before hiding the custom dialog
                 //...you can do whenever you want or whenever your work is done
-                viewDialog.hideDialog();
+                if (!LoginActivity.this.isFinishing() && viewDialog != null) {
+                    viewDialog.dismiss();
+                }
             }
         }, 1000);
     }
