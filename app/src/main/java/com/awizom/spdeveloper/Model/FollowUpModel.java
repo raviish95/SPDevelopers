@@ -7,6 +7,7 @@ public class FollowUpModel {
     public  String Name;
     public String FollowUpMethod ;
     public String FollowUpDate;
+    public String Feedback ;
 
     public String getFeedback() {
         return Feedback;
@@ -16,7 +17,7 @@ public class FollowUpModel {
         Feedback = feedback;
     }
 
-    public String Feedback ;
+
     public String getName() {
         return Name;
     }

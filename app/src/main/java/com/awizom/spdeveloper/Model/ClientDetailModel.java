@@ -5,12 +5,23 @@ public class ClientDetailModel {
     public int EmployeeID;
     public String Name ;
     public String MobNo ;
+
+
+
     public String AltMobNo;
     public String Address;
     public String Email ;
     public String CreatedBy ;
     public String CreatedOn;
+    public boolean isFollowed ;
 
+    public boolean isFollowed() {
+        return isFollowed;
+    }
+
+    public void setFollowed(boolean followed) {
+        isFollowed = followed;
+    }
     public int getClientID() {
         return ClientID;
     }
