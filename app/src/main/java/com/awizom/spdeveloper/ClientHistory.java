@@ -2,11 +2,14 @@ package com.awizom.spdeveloper;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -45,7 +48,6 @@ public class ClientHistory extends AppCompatActivity {
             Initview();
             //   Toast.makeText(HomePage.this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void Initview() {
@@ -62,6 +64,16 @@ public class ClientHistory extends AppCompatActivity {
             }
         });
       /*  leadfilt = (Spinner) findViewById(R.id.spinner);*/
+        Window window = this.getWindow();
+
+// clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+// finally change the color
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.statusbar_color));
         location = findViewById(R.id.location);
         client = findViewById(R.id.client);
         mobno = findViewById(R.id.mobno);

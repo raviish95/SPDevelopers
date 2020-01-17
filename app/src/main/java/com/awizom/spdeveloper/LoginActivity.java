@@ -24,7 +24,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
-
 public class LoginActivity extends AppCompatActivity {
     EditText editUserName, password;
     br.com.simplepass.loading_button_lib.customViews.CircularProgressButton login;
@@ -34,8 +33,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
         if (!(SharedPrefManager.getInstance(LoginActivity.this).getUser().getEmployeeID() == 0)) {
             Intent intent = new Intent(LoginActivity.this, HomePage.class);
             startActivity(intent);
@@ -86,55 +85,63 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCustomLoadingDialog();
-                if (editUserName.getText().toString().isEmpty() || editUserName.getText().toString().contains(" ")) {
-                    progressDialog.dismiss();
-                    editUserName.setError("Please Enter valid UserName");
-                    editUserName.requestFocus();
-                } else if (password.getText().toString().isEmpty() || password.getText().toString().contains(" ")) {
-                    progressDialog.dismiss();
-                    password.setError("Please Enter valid Password");
-                    password.requestFocus();
-                } else {
-                    // showCustomLoadingDialog();
-                    login.startAnimation();
-                    try {
-                        result = new ProfileHelper.LogIn().execute(editUserName.getText().toString(), password.getText().toString()).get();
-                        if (result.isEmpty()) {
-                            Toast.makeText(LoginActivity.this, "Invalid request", Toast.LENGTH_SHORT).show();
-                            result = new ProfileHelper.LogIn().execute(editUserName.getText().toString(), password.getText().toString()).get();
-                        } else {
-                            Gson gson = new Gson();
-                            Type listType = new TypeToken<LoginModel>() {
-                            }.getType();
-                            LoginModel loginModel = new Gson().fromJson(result, listType);
-                            String empid = String.valueOf(loginModel.getEmployeeID());
-                            if (!empid.equals("0")) {
-                                String userID = loginModel.getUserID().toString();
-                                LoginModel loginModel1 = new LoginModel();
-                                loginModel1.EmployeeID = Integer.parseInt((empid));
-                                loginModel1.UserID = String.valueOf(userID.toString());
-                                loginModel1.UserName = editUserName.getText().toString();
-                                SharedPrefManager.getInstance(getApplicationContext()).userLogin(loginModel1);
-                                Intent intent = new Intent(LoginActivity.this, HomePage.class);
-                                intent.putExtra("EmployeeID", empid.toString());
-                                intent.putExtra("UserName", editUserName.getText().toString());
-                                intent.putExtra("Welcome", "welcometo");
-                                startActivity(intent);
-                                //   progressDialog.dismiss();
-                            } else {
-                                //   progressDialog.dismiss();
-                                login.revertAnimation();
-                                editUserName.setError("Wrong UserId or Password");
-                                password.setError("Wrong UserId or Password");
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                PostLogin();
             }
         });
+    }
+
+    private void PostLogin() {
+
+            showCustomLoadingDialog();
+
+            if (editUserName.getText().toString().isEmpty() || editUserName.getText().toString().contains(" ")) {
+                progressDialog.dismiss();
+                editUserName.setError("Please Enter valid UserName");
+                editUserName.requestFocus();
+            } else if (password.getText().toString().isEmpty() || password.getText().toString().contains(" ")) {
+                progressDialog.dismiss();
+                password.setError("Please Enter valid Password");
+                password.requestFocus();
+            } else {
+                // showCustomLoadingDialog();
+                login.startAnimation();
+                try {
+                    result = new ProfileHelper.LogIn().execute(editUserName.getText().toString(), password.getText().toString()).get();
+                    if (result.isEmpty()) {
+
+                        PostLogin();
+                      } else {
+                        Gson gson = new Gson();
+                        Type listType = new TypeToken<LoginModel>() {
+                        }.getType();
+                        LoginModel loginModel = new Gson().fromJson(result, listType);
+                        String empid = String.valueOf(loginModel.getEmployeeID());
+                        if (!empid.equals("0")) {
+                            String userID = loginModel.getUserID().toString();
+                            LoginModel loginModel1 = new LoginModel();
+                            loginModel1.EmployeeID = Integer.parseInt((empid));
+                            loginModel1.UserID = String.valueOf(userID.toString());
+                            loginModel1.UserName = editUserName.getText().toString();
+                            SharedPrefManager.getInstance(getApplicationContext()).userLogin(loginModel1);
+                            Intent intent = new Intent(LoginActivity.this, HomePage.class);
+                            intent.putExtra("EmployeeID", empid.toString());
+                            intent.putExtra("UserName", editUserName.getText().toString());
+                            intent.putExtra("Welcome", "welcometo");
+                            startActivity(intent);
+                            //   progressDialog.dismiss();
+                        } else {
+                            //   progressDialog.dismiss();
+                            login.revertAnimation();
+                            editUserName.setError("Wrong UserId or Password");
+                            password.setError("Wrong UserId or Password");
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+
     }
 
     private void showCustomLoadingDialog() {

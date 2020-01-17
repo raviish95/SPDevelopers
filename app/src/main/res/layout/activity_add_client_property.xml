@@ -15,9 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:popupTheme="@style/AppTheme.PopupOverlay">
-
-    </android.support.v7.widget.Toolbar>
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,27 +25,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:orientation="vertical"
             android:padding="20dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    style="@style/viewParent.headerText.NoMode"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:text="Enter\nClient's\nDetail "
-                    android:textColor="@color/black" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:src="@drawable/ic_login_hero" />
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/cname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Client Name"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -67,58 +59,35 @@
                         style="@style/parent"
                         android:layout_marginTop="@dimen/loginViewsMargin">
 
-                        <EditText
+                        <AutoCompleteTextView
                             android:id="@+id/editTextName"
                             style="@style/modifiedEditText"
-                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                            android:hint="Name"
-                            android:maxLines="1" />
+                            android:hint="PropertyName"
+                            android:text=""
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                        <!--   <EditText
+                               android:id="@+id/editTextName"
+                               style="@style/modifiedEditText"
+                               android:hint="PropertyName"
+                               android:inputType="textPersonName"
+                               android:maxLines="1" />-->
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
-                        android:id="@+id/textInputEmail"
+                        android:id="@+id/textInputArea"
                         style="@style/parent"
                         android:layout_marginTop="@dimen/loginViewsMargin">
 
                         <EditText
-                            android:id="@+id/editTextEmail"
+                            android:id="@+id/editTextPropertyArea"
                             style="@style/modifiedEditText"
-                            android:hint="@string/login_email_hint"
-                            android:inputType="textEmailAddress"
+                            android:hint="Property Area"
                             android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
-                        android:id="@+id/textInputMobile"
-                        style="@style/parent"
-                        android:layout_marginTop="@dimen/loginViewsMargin">
-
-                        <EditText
-                            android:id="@+id/editTextMobile"
-                            style="@style/modifiedEditText"
-                            android:hint="Mobile Number"
-                            android:inputType="phone"
-                            android:maxLength="10"
-
-                            android:maxLines="1" />
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/textInputAltMob"
-                        style="@style/parent"
-                        android:layout_marginTop="@dimen/loginViewsMargin">
-
-                        <EditText
-                            android:id="@+id/editTextAltMobile"
-                            style="@style/modifiedEditText"
-                            android:hint="Alternate Mobile No"
-                            android:maxLength="10"
-                            android:inputType="phone"
-                            android:maxLines="1" />
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/textInputAddress"
+                        android:id="@+id/textInputAddres"
                         style="@style/parent"
                         android:layout_marginTop="@dimen/loginViewsMargin">
 
@@ -126,9 +95,19 @@
                             android:id="@+id/editTextAddress"
                             style="@style/modifiedEditText"
                             android:hint="Address"
-                            android:inputType="text"
                             android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>
+
+
+                    <ImageView
+                        android:id="@+id/imagesrc"
+                        android:layout_width="250dp"
+                        android:layout_height="250dp"
+                        android:layout_gravity="center_horizontal"
+                        android:configChanges="orientation|keyboardHidden"
+                        android:screenOrientation="portrait"
+                        android:src="@drawable/upload_property" />
+
 
                     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
                         android:id="@+id/cirSubmitButton"

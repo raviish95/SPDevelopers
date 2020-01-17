@@ -2,11 +2,14 @@ package com.awizom.spdeveloper;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.awizom.spdeveloper.Adapter.ClientListAdapter;
@@ -52,6 +55,16 @@ public class FollowUpHistory extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        Window window = this.getWindow();
+
+// clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+// finally change the color
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.statusbar_color));
         client = findViewById(R.id.client);
         filterbtn = findViewById(R.id.filterButton);
         recyclerView = findViewById(R.id.recyclerview);

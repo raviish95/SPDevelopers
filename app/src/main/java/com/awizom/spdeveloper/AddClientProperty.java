@@ -1,10 +1,8 @@
 package com.awizom.spdeveloper;
 
 import android.accounts.AccountManager;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,21 +13,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -37,12 +34,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.awizom.spdeveloper.Adapter.ClientListAdapter;
 import com.awizom.spdeveloper.Adapter.ClientPropertyListAdapter;
 import com.awizom.spdeveloper.Helper.ClientHelper;
-import com.awizom.spdeveloper.Helper.ProfileHelper;
 import com.awizom.spdeveloper.Model.ClientDetailModel;
 import com.awizom.spdeveloper.Model.ClientPropertyModel;
 import com.google.gson.Gson;
@@ -59,57 +53,67 @@ import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class ClientPropertyDetail extends AppCompatActivity {
+public class AddClientProperty extends AppCompatActivity {
 
-    String clientid = "", result;
-    TextView name, mobno, altmobno, address, email;
-    Button addProperty;
-    String Check = "";
-    Uri picUri;
-    Uri outputFileUri;
+    EditText editTextAddress;
+    AutoCompleteTextView propertyname;
+    EditText propertyarea;
     ImageView imageView;
-    RecyclerView recyclerView;
+    Uri picUri;
+    br.com.simplepass.loading_button_lib.customViews.CircularProgressButton cirSubmitButton;
+    String Check = "";
+    Uri outputFileUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
     private ArrayList<String> permissions = new ArrayList<>();
     private final static int ALL_PERMISSIONS_RESULT = 107;
     private final static int IMAGE_RESULT = 200;
     private static int TIMER = 300;
-    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
-    EditText editTextAddress;
-    AutoCompleteTextView propertyname;
-    EditText propertyarea;
-    List<ClientPropertyModel> clientpropertylist;
+    String clientid = "", name = "", result;
+    TextView cname;
     List<String> propertynamelist;
-    ClientPropertyListAdapter clientPropertyListAdapter;
+    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_client_property_detail);
+        setContentView(R.layout.activity_add_client_property);
         InitView();
     }
 
     private void InitView() {
-        clientid = getIntent().getStringExtra("ClientID");
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Client's Property");
+        toolbar.setTitle("Add Client's Property");
+        toolbar.setBackgroundColor(Color.parseColor("#488586"));
         toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
-        setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
+        setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ClientPropertyDetail.this, HomePage.class);
-                startActivity(intent);
+                onBackPressed();
             }
         });
-        name = findViewById(R.id.name);
-        mobno = findViewById(R.id.mobno);
-        altmobno = findViewById(R.id.addmobno);
-        address = findViewById(R.id.place);
-        email = findViewById(R.id.email);
-        addProperty = findViewById(R.id.addProperty);
+        Window window = this.getWindow();
+
+// clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+// finally change the color
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.statusbar_color));
+        clientid = getIntent().getStringExtra("ClientID");
+        name = getIntent().getStringExtra("Name");
+        cname = findViewById(R.id.cname);
+        cname.setPaintFlags(cname.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        cname.setText(name);
+        propertyname = findViewById(R.id.editTextName);
+
+        propertyarea = findViewById(R.id.editTextPropertyArea);
+        editTextAddress = findViewById(R.id.editTextAddress);
+        imageView = findViewById(R.id.imagesrc);
         permissions.add(CAMERA);
         permissions.add(WRITE_EXTERNAL_STORAGE);
         permissions.add(READ_EXTERNAL_STORAGE);
@@ -118,33 +122,64 @@ public class ClientPropertyDetail extends AppCompatActivity {
             if (permissionsToRequest.size() > 0)
                 requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
         }
-        recyclerView = findViewById(R.id.recyclerview);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.scrollToPosition(0);
-        recyclerView.smoothScrollToPosition(0);
-        getpropertylist();
-
-        addProperty.setOnClickListener(new View.OnClickListener() {
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(ClientPropertyDetail.this,AddClientProperty.class);
-                intent.putExtra("ClientID",clientid);
-                intent.putExtra("Name",name.getText().toString()) ;
-                startActivity(intent);
+                Check = "Image";
+                startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
             }
         });
-        getCLientdetails();
+        cirSubmitButton = findViewById(R.id.cirSubmitButton);
+        cirSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PostProperty();
+            }
+        });
+        getPropertyName();
     }
 
-    @SuppressLint("ResourceType")
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            Intent intent = new Intent(this, HomePage.class);
-            startActivity(intent);
+    private void PostProperty() {
+
+        imageView.buildDrawingCache();
+        Bitmap bitmap = imageView.getDrawingCache();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        byte[] image = stream.toByteArray();
+        System.out.println("byte array:" + image);
+        String img_str = Base64.encodeToString(image, 0);
+        String pname = propertyname.getText().toString();
+        String parea = propertyarea.getText().toString();
+        String addres = editTextAddress.getText().toString();
+        String id = clientid;
+
+        if (propertyname.getText().toString().isEmpty()) {
+            propertyname.setError("Please enter property Name");
+            propertyname.requestFocus();
+        } else if (propertyarea.getText().toString().isEmpty()) {
+            propertyarea.setError("Please enter property Name");
+            propertyarea.requestFocus();
+        } else if (editTextAddress.getText().toString().isEmpty()) {
+            editTextAddress.setError("Please enter valid Address");
+            editTextAddress.requestFocus();
+        } else {
+            cirSubmitButton.startAnimation();
+            try {
+                    result = new ClientHelper.POSTProperty().execute(id, pname, parea, img_str, addres).get();
+                    if (result.isEmpty()) {
+                        result = new ClientHelper.POSTProperty().execute(id, pname, parea, img_str, addres).get();
+
+                    } else {
+                        Intent intent = new Intent(getApplicationContext(), ClientPropertyDetail.class);
+                        intent.putExtra("ClientID", id);
+                        startActivity(intent);
+                        cirSubmitButton.revertAnimation();
+                    }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return super.onKeyDown(keyCode, event);
     }
 
     private void getPropertyName() {
@@ -161,26 +196,6 @@ public class ClientPropertyDetail extends AppCompatActivity {
                         (this, android.R.layout.select_dialog_item, propertynamelist);
                 propertyname.setThreshold(1);//will start working from first character
                 propertyname.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
-                //  Toast.makeText(getApplicationContext(), result + " Success", Toast.LENGTH_LONG).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void getpropertylist() {
-        try {
-            result = new ClientHelper.GetClientPropertyList().execute(clientid.toString()).get();
-            if (result.isEmpty()) {
-                result = new ClientHelper.GetClientPropertyList().execute(clientid.toString()).get();
-            } else {
-                Gson gson = new Gson();
-                Type listType = new TypeToken<List<ClientPropertyModel>>() {
-                }.getType();
-                clientpropertylist = new Gson().fromJson(result, listType);
-                clientPropertyListAdapter = new ClientPropertyListAdapter(ClientPropertyDetail.this, clientpropertylist);
-                recyclerView.setAdapter(clientPropertyListAdapter);
                 //  Toast.makeText(getApplicationContext(), result + " Success", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
@@ -241,10 +256,6 @@ public class ClientPropertyDetail extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == 201 && resultCode == RESULT_OK) {
-            String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-            email.setText(accountName);
-        }
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == IMAGE_RESULT) {
@@ -392,25 +403,5 @@ public class ClientPropertyDetail extends AppCompatActivity {
         }
     }
 
-    private void getCLientdetails() {
-        try {
-            result = new ClientHelper.GetClientDetail().execute(clientid.toString()).get();
-            if (result.isEmpty()) {
-                result = new ClientHelper.GetClientDetail().execute(clientid.toString()).get();
-            } else {
-                Gson gson = new Gson();
-                Type listType = new TypeToken<ClientDetailModel>() {
-                }.getType();
-                ClientDetailModel cdetail = new Gson().fromJson(result, listType);
-                name.setText(String.valueOf(cdetail.getName()));
-                email.setText(String.valueOf(cdetail.getEmail()));
-                mobno.setText(String.valueOf(cdetail.getMobNo()));
-                altmobno.setText(String.valueOf(cdetail.getAltMobNo()));
-                address.setText(String.valueOf(cdetail.getAddress()));
-                //  Toast.makeText(getApplicationContext(), result + " Success", Toast.LENGTH_LONG).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
+
