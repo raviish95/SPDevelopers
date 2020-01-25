@@ -1,9 +1,13 @@
 package com.awizom.spdeveloper;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -85,9 +89,12 @@ public class RegisterActivity extends AppCompatActivity {
 
                             result = new ProfileHelper.AddRegister().execute(name.getText().toString(), email.getText().toString(), mobno.getText().toString(), altmobno.getText().toString(), address.getText().toString(), registertype.toString()).get();
                         } else {
-                            Toast.makeText(getApplicationContext(), "Your registration request was successfully sent to admin", Toast.LENGTH_LONG).show();
+
+                            openConfirm();
+
+                          /*  Toast.makeText(getApplicationContext(), "Your registration request was successfully sent to admin", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                            overridePendingTransition(R.anim.slide_in_left, android.R.anim.slide_out_right);
+                            overridePendingTransition(R.anim.slide_in_left, android.R.anim.slide_out_right);*/
                             register.revertAnimation();
                         }
                     } catch (Exception e) {
@@ -96,6 +103,26 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void openConfirm() {
+
+        android.support.v7.app.AlertDialog b;
+        final android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(RegisterActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.open_search_list, null);
+        br.com.simplepass.loading_button_lib.customViews.CircularProgressButton okbtn =dialogView.findViewById(R.id.cirRegisterButton);
+        okbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                overridePendingTransition(R.anim.slide_in_left, android.R.anim.slide_out_right);
+            }
+        });
+        dialogBuilder.setView(dialogView);
+        dialogView.setBackgroundColor(Color.parseColor("#F0F8FF"));
+        b = dialogBuilder.create();
+        b.show();
     }
 
     private void changeStatusBarColor() {
