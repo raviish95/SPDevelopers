@@ -17,9 +17,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.awizom.spdeveloper.ClientPropertyDetail;
 import com.awizom.spdeveloper.Config.AppConfig;
 import com.awizom.spdeveloper.Model.ClientDetailModel;
+import com.awizom.spdeveloper.Model.ProjectViewModel;
 import com.awizom.spdeveloper.Model.PropertyModel;
 import com.awizom.spdeveloper.R;
 import com.bumptech.glide.Glide;
@@ -30,26 +32,27 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class PropertyListAdapter extends RecyclerView.Adapter<PropertyListAdapter.MyViewHolder> {
 
     ProgressDialog progressDialog;
-    private List<PropertyModel> propertylist;
+    private List<ProjectViewModel> propertylist;
     private Context mCtx;
 
 
-    public PropertyListAdapter(Context baseContext, List<PropertyModel> clientList) {
+    public PropertyListAdapter(Context baseContext, List<ProjectViewModel> clientList) {
         this.propertylist = clientList;
         this.mCtx = baseContext;
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        PropertyModel c = propertylist.get(position);
-        holder.cpropertyid.setText(String.valueOf(c.getPropertyID()));
-        holder.pname.setText(String.valueOf(c.getPropertyName()));
-        holder.property_area.setText(String.valueOf(c.getPropertyArea()));
-        holder.address.setText(String.valueOf(c.getAddress()));
+        ProjectViewModel c = propertylist.get(position);
+        holder.cpropertyid.setText(String.valueOf(c.getProjectID()));
+        holder.pname.setText(String.valueOf(c.getProjectName()));
+        holder.property_area.setText(String.valueOf(c.getArea()));
+        holder.address.setText(String.valueOf(c.getPropertyAddress()));
         holder.createdon.setText(String.valueOf(c.getCreatedOn().split("T")[0]));
-        holder.img_link.setText(String.valueOf(AppConfig.BASE_URL +c.getPhoto().toString()));
+
         try {
-            Glide.with(mCtx).load(AppConfig.BASE_URL + c.getPhoto().toString()).into(holder.propertyImage);
+            holder.img_link.setText(String.valueOf(AppConfig.BASE_URL + c.getImage().toString()));
+            Glide.with(mCtx).load(AppConfig.BASE_URL + c.getImage().toString()).into(holder.propertyImage);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,6 +65,7 @@ public class PropertyListAdapter extends RecyclerView.Adapter<PropertyListAdapte
         });
 
     }
+
     private void openZommImage(String imagelinkid, Context mCtx) {
 
         final android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(mCtx);
@@ -118,13 +122,14 @@ public class PropertyListAdapter extends RecyclerView.Adapter<PropertyListAdapte
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView pname, cpropertyid, property_area, createdon, address,img_link;
+        public TextView pname, cpropertyid, property_area, createdon, address, img_link;
         ImageView propertyImage;
+
         @RequiresApi(api = Build.VERSION_CODES.M)
         public MyViewHolder(View view) {
             super(view);
             progressDialog = new ProgressDialog(mCtx);
-            img_link=view.findViewById(R.id.img_link);
+            img_link = view.findViewById(R.id.img_link);
             pname = view.findViewById(R.id.property_name);
             property_area = view.findViewById(R.id.property_area);
             createdon = view.findViewById(R.id.createdon);

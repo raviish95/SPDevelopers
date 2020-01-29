@@ -101,7 +101,7 @@ public class AddClient extends AppCompatActivity {
                 String altmobnos=altmobno.getText().toString();
                 if(altmobnos.equals(""))
                 {
-                    altmobnos="null";
+                    altmobnos="nullval";
                 }
                 result = new ClientHelper.AddClient().execute(name.getText().toString(), email.getText().toString(), mobno.getText().toString(), altmobnos.toString(), address.getText().toString(), empid.toString()).get();
                 if (result.isEmpty()) {

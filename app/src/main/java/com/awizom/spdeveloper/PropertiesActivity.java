@@ -21,7 +21,6 @@ public class PropertiesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_properties);
         intitview();
-
     }
 
     private void intitview() {

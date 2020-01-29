@@ -6,7 +6,17 @@ public class PropertyModel {
     public String PropertyName ;
     public String ClientName ;
     public long Contact ;
-
+    public String PropertyArea ;
+    public String Photo;
+    public String Status ;
+    public String PropertyDescription ;
+    public String PropertyType ;
+    public double minPrice ;
+    public double maxPrice ;
+    public String Address ;
+    public String City ;
+    public String CreatedBy ;
+    public String CreatedOn ;
     public int getPropertyID() {
         return PropertyID;
     }
@@ -127,15 +137,4 @@ public class PropertyModel {
         CreatedOn = createdOn;
     }
 
-    public String PropertyArea ;
-    public String Photo;
-    public String Status ;
-    public String PropertyDescription ;
-    public String PropertyType ;
-    public double minPrice ;
-    public double maxPrice ;
-    public String Address ;
-    public String City ;
-    public String CreatedBy ;
-    public String CreatedOn ;
 }

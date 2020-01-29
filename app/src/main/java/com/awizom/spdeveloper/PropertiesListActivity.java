@@ -12,6 +12,7 @@ import com.awizom.spdeveloper.Adapter.ClientListAdapter;
 import com.awizom.spdeveloper.Adapter.PropertyListAdapter;
 import com.awizom.spdeveloper.Helper.ClientHelper;
 import com.awizom.spdeveloper.Helper.WebHelper;
+import com.awizom.spdeveloper.Model.ProjectViewModel;
 import com.awizom.spdeveloper.Model.PropertyModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -22,7 +23,7 @@ import java.util.List;
 public class PropertiesListActivity extends AppCompatActivity {
 
     String result="";
-    List<PropertyModel> propertyModels;
+    List<ProjectViewModel> propertyModels;
     PropertyListAdapter adapterPropertyList;
     RecyclerView recyclerView;
     @Override
@@ -73,7 +74,7 @@ public class PropertiesListActivity extends AppCompatActivity {
                 result = new WebHelper.GetPendingProperty().execute().get();
             } else {
                 Gson gson = new Gson();
-                Type listType = new TypeToken<List<PropertyModel>>() {
+                Type listType = new TypeToken<List<ProjectViewModel>>() {
                 }.getType();
                 propertyModels = new Gson().fromJson(result, listType);
                 adapterPropertyList = new PropertyListAdapter(PropertiesListActivity.this, propertyModels);
@@ -92,7 +93,7 @@ public class PropertiesListActivity extends AppCompatActivity {
                 result = new WebHelper.GetRunningProperty().execute().get();
             } else {
                 Gson gson = new Gson();
-                Type listType = new TypeToken<List<PropertyModel>>() {
+                Type listType = new TypeToken<List<ProjectViewModel>>() {
                 }.getType();
                 propertyModels = new Gson().fromJson(result, listType);
                 adapterPropertyList = new PropertyListAdapter(PropertiesListActivity.this, propertyModels);
@@ -112,7 +113,7 @@ public class PropertiesListActivity extends AppCompatActivity {
                 result = new WebHelper.GetCompletedProperty().execute().get();
             } else {
                 Gson gson = new Gson();
-                Type listType = new TypeToken<List<PropertyModel>>() {
+                Type listType = new TypeToken<List<ProjectViewModel>>() {
                 }.getType();
                 propertyModels = new Gson().fromJson(result, listType);
                 adapterPropertyList = new PropertyListAdapter(PropertiesListActivity.this, propertyModels);
