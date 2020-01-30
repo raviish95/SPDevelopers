@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.awizom.spdeveloper.Helper.ClientHelper;
@@ -27,21 +28,25 @@ public class RegisterActivity extends AppCompatActivity {
     EditText name, email, mobno, altmobno, address;
     String registertype = "", result = "";
     br.com.simplepass.loading_button_lib.customViews.CircularProgressButton register;
+    String registrclck = "", loginclck = "";
+    TextView registrtext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         changeStatusBarColor();
-        if(new InternetDialog(RegisterActivity.this).getInternetStatus()){
+        if (new InternetDialog(RegisterActivity.this).getInternetStatus()) {
             InitView();
             //   Toast.makeText(HomePage.this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void InitView() {
-
+        registrclck = getIntent().getStringExtra("RegisterClick");
+        loginclck = getIntent().getStringExtra("LoginClick");
         Spinner spin = (Spinner) findViewById(R.id.spinner);
+        registrtext = findViewById(R.id.registrtext);
         name = findViewById(R.id.editTextName);
         email = findViewById(R.id.editTextEmail);
         mobno = findViewById(R.id.editTextMobile);
@@ -65,6 +70,28 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
+
+        try {
+            if (loginclck.equals("Yes")) {
+                registrtext.setTextColor(Color.parseColor("#641E16"));
+            }
+        } catch (Exception e)
+
+        {
+            e.printStackTrace();
+        }
+
+        registrtext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                intent.putExtra("LoginClick", "Yes");
+                intent.putExtra("RegisterClick", registrclck);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left, android.R.anim.slide_out_right);
+
+            }
+        });
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,10 +102,10 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if (email.getText().toString().isEmpty()) {
                     email.setError("Please Enter valid email");
                     email.requestFocus();
-                } else if ((mobno.getText().toString().isEmpty()) || mobno.getText().toString().length()<10 || mobno.getText().toString().length()>10) {
+                } else if ((mobno.getText().toString().isEmpty()) || mobno.getText().toString().length() < 10 || mobno.getText().toString().length() > 10) {
                     mobno.setError("Please Enter valid mobno");
                     mobno.requestFocus();
-                }  else if (address.getText().toString().isEmpty()) {
+                } else if (address.getText().toString().isEmpty()) {
                     address.setError("Please Enter valid Address");
                     address.requestFocus();
                 } else {
@@ -111,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity {
         final android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(RegisterActivity.this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.open_search_list, null);
-        br.com.simplepass.loading_button_lib.customViews.CircularProgressButton okbtn =dialogView.findViewById(R.id.cirRegisterButton);
+        br.com.simplepass.loading_button_lib.customViews.CircularProgressButton okbtn = dialogView.findViewById(R.id.cirRegisterButton);
         okbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,7 +162,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void onLoginClick(View view) {
-        startActivity(new Intent(this, LoginActivity.class));
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("LoginClick", "Yes");
+        intent.putExtra("RegisterClick", registrclck);
+        startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, android.R.anim.slide_out_right);
 
     }

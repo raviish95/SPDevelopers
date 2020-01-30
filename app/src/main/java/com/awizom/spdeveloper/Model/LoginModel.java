@@ -4,6 +4,16 @@ public class LoginModel {
 
     public int EmployeeID;
     public String UserID;
+    public String UserName;
+    public  boolean isActive;
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 
     public int getEmployeeID() {
         return EmployeeID;
@@ -13,7 +23,6 @@ public class LoginModel {
         EmployeeID = employeeID;
     }
 
-    public String UserName;
 
     public String getUserName() {
         return UserName;
@@ -22,7 +31,6 @@ public class LoginModel {
     public void setUserName(String userName) {
         UserName = userName;
     }
-
 
 
 

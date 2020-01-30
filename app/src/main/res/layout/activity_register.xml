@@ -155,7 +155,8 @@
                     <TextView
                         style="@style/parent"
                         android:layout_marginTop="@dimen/loginViewsMargin"
-                        android:onClick="onLoginClick"
+
+                        android:id="@+id/registrtext"
                         android:text="Already have an account?"
                         android:textAlignment="center"
                         android:textColor="@color/black"

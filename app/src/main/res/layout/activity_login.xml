@@ -93,7 +93,8 @@
             <TextView
                 style="@style/parent"
                 android:layout_marginTop="@dimen/loginViewsMargin"
-                android:onClick="onLoginClick"
+
+                android:id="@+id/logintext"
                 android:text="New user? Register Now"
                 android:textAlignment="center"
                 android:textColor="@color/black"

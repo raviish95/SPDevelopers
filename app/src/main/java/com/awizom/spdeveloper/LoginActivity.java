@@ -6,15 +6,18 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.awizom.spdeveloper.Helper.ProfileHelper;
@@ -28,8 +31,10 @@ public class LoginActivity extends AppCompatActivity {
     EditText editUserName, password;
     br.com.simplepass.loading_button_lib.customViews.CircularProgressButton login;
     private AlertDialog progressDialog;
+    TextView logintext;
     String result = "";
     ProgressDialog viewDialog;
+    String registrclck = "", loginclck = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +80,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initview() {
+        loginclck = getIntent().getStringExtra("LoginClick");
+        registrclck = getIntent().getStringExtra("RegisterClick");
         progressDialog = new ProgressDialog(this);
         editUserName = findViewById(R.id.editUserName);
         password = findViewById(R.id.editTextPassword);
@@ -88,60 +95,105 @@ public class LoginActivity extends AppCompatActivity {
                 PostLogin();
             }
         });
+        logintext = findViewById(R.id.logintext);
+        try {
+            if (registrclck.equals("Yes")) {
+                logintext.setTextColor(Color.parseColor("#641E16"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        logintext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                intent.putExtra("RegisterClick", "Yes");
+                intent.putExtra("LoginClick", loginclck);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
+            }
+        });
     }
 
     private void PostLogin() {
 
-            showCustomLoadingDialog();
+        showCustomLoadingDialog();
 
-            if (editUserName.getText().toString().isEmpty() || editUserName.getText().toString().contains(" ")) {
-                progressDialog.dismiss();
-                editUserName.setError("Please Enter valid UserName");
-                editUserName.requestFocus();
-            } else if (password.getText().toString().isEmpty() || password.getText().toString().contains(" ")) {
-                progressDialog.dismiss();
-                password.setError("Please Enter valid Password");
-                password.requestFocus();
-            } else {
-                // showCustomLoadingDialog();
-                login.startAnimation();
-                try {
-                    result = new ProfileHelper.LogIn().execute(editUserName.getText().toString(), password.getText().toString()).get();
-                    if (result.isEmpty()) {
+        if (editUserName.getText().toString().isEmpty() || editUserName.getText().toString().contains(" ")) {
+            progressDialog.dismiss();
+            editUserName.setError("Please Enter valid UserName");
+            editUserName.requestFocus();
+        } else if (password.getText().toString().isEmpty() || password.getText().toString().contains(" ")) {
+            progressDialog.dismiss();
+            password.setError("Please Enter valid Password");
+            password.requestFocus();
+        } else {
+            // showCustomLoadingDialog();
+            login.startAnimation();
+            try {
+                result = new ProfileHelper.LogIn().execute(editUserName.getText().toString(), password.getText().toString()).get();
+                if (result.isEmpty()) {
 
-                        PostLogin();
-                      } else {
-                        Gson gson = new Gson();
-                        Type listType = new TypeToken<LoginModel>() {
-                        }.getType();
-                        LoginModel loginModel = new Gson().fromJson(result, listType);
-                        String empid = String.valueOf(loginModel.getEmployeeID());
-                        if (!empid.equals("0")) {
+                    PostLogin();
+                } else {
+                    Gson gson = new Gson();
+                    Type listType = new TypeToken<LoginModel>() {
+                    }.getType();
+                    LoginModel loginModel = new Gson().fromJson(result, listType);
+
+                    String empid = String.valueOf(loginModel.getEmployeeID());
+                    if (!empid.equals("0")) {
+                        if (!loginModel.isActive()) {
+                            openConfirm();
+                            login.revertAnimation();
+                        } else {
                             String userID = loginModel.getUserID().toString();
                             LoginModel loginModel1 = new LoginModel();
                             loginModel1.EmployeeID = Integer.parseInt((empid));
                             loginModel1.UserID = String.valueOf(userID.toString());
                             loginModel1.UserName = editUserName.getText().toString();
+
                             SharedPrefManager.getInstance(getApplicationContext()).userLogin(loginModel1);
                             Intent intent = new Intent(LoginActivity.this, HomePage.class);
                             intent.putExtra("EmployeeID", empid.toString());
                             intent.putExtra("UserName", editUserName.getText().toString());
                             intent.putExtra("Welcome", "welcometo");
                             startActivity(intent);
-                            //   progressDialog.dismiss();
-                        } else {
-                            //   progressDialog.dismiss();
-                            login.revertAnimation();
-                            editUserName.setError("Wrong UserId or Password");
-                            password.setError("Wrong UserId or Password");
                         }
+                        //   progressDialog.dismiss();
+                    } else {
+                        //   progressDialog.dismiss();
+                        login.revertAnimation();
+                        editUserName.setError("Wrong UserId or Password");
+                        password.setError("Wrong UserId or Password");
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        }
+    }
 
+    private void openConfirm() {
 
+        final android.support.v7.app.AlertDialog b;
+        final android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(LoginActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.open_not_active, null);
+        br.com.simplepass.loading_button_lib.customViews.CircularProgressButton okbtn = dialogView.findViewById(R.id.cirRegisterButton);
+
+        dialogBuilder.setView(dialogView);
+        dialogView.setBackgroundColor(Color.parseColor("#F0F8FF"));
+        b = dialogBuilder.create();
+        b.show();
+        okbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editUserName.setText("");
+                password.setText("");
+                b.dismiss();
+            }
+        });
     }
 
     private void showCustomLoadingDialog() {
@@ -159,10 +211,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         }, 1000);
     }
-
+/*
     public void onLoginClick(View View) {
-        startActivity(new Intent(this, RegisterActivity.class));
-        overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
 
-    }
+        Intent intent = new Intent(this, RegisterActivity.class);
+        intent.putExtra("RegisterClick", "Yes");
+        intent.putExtra("LoginClick", loginclck);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
+    }*/
 }
