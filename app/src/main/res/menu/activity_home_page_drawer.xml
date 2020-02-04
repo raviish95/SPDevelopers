@@ -13,7 +13,6 @@
             android:icon="@drawable/ic_history_black_24dp"
             android:title="Lead History" />
 
-
         <item
             android:id="@+id/nav_follow"
             android:icon="@drawable/ic_autorenew_black_24dp"
@@ -22,6 +21,10 @@
             android:id="@+id/nav_followhistory"
             android:icon="@drawable/ic_record_voice_over_black_24dp"
             android:title="Follow Up History" />
+        <item
+            android:id="@+id/nav_leader"
+            android:icon="@drawable/team_24dp"
+            android:title="My Team" />
 
 
     </group>

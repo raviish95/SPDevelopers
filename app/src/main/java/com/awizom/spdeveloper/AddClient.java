@@ -7,13 +7,21 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.awizom.spdeveloper.Helper.ClientHelper;
+import com.awizom.spdeveloper.Model.LoginMobModel;
+import com.awizom.spdeveloper.Model.LoginModel;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 
 public class AddClient extends AppCompatActivity {
     EditText name, email, mobno, altmobno, address;
@@ -107,23 +115,54 @@ public class AddClient extends AppCompatActivity {
                 if (result.isEmpty()) {
                     result = new ClientHelper.AddClient().execute(name.getText().toString(), email.getText().toString(), mobno.getText().toString(), altmobnos.toString(), address.getText().toString(), empid.toString()).get();
                 }
-                else if(result.equals("100"))
-                {
-                    Toast.makeText(getApplicationContext(), "EmailID or mobile no is already registered", Toast.LENGTH_LONG).show();
-                    submit.revertAnimation();
-                }
+
                 else {
-                    Toast.makeText(getApplicationContext(), " Success", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(AddClient.this, ClientPropertyDetail.class);
-                    intent.putExtra("ClientID", String.valueOf(result));
-                    startActivity(intent);
-                    submit.revertAnimation();
+                    Type listType = new TypeToken<LoginMobModel>() {
+                    }.getType();
+                    LoginMobModel loginModel = new Gson().fromJson(result, listType);
+                  if(loginModel.getRole().equals("exist"))
+                    {
+                        String name=loginModel.getName();
+                        openConfirm(name);
+                        Toast.makeText(getApplicationContext(), "Client is already follow up by-"+name, Toast.LENGTH_LONG).show();
+                        submit.revertAnimation();
+
+                    }
+                    else {
+
+                      Toast.makeText(getApplicationContext(), " Success", Toast.LENGTH_LONG).show();
+                      Intent intent = new Intent(AddClient.this, ClientPropertyDetail.class);
+                      intent.putExtra("ClientID", String.valueOf(result));
+                      startActivity(intent);
+                      submit.revertAnimation();
+                  }
                   /*  progressDialog.dismiss();*/
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void openConfirm(String name) {
+        final android.support.v7.app.AlertDialog b;
+        final android.support.v7.app.AlertDialog.Builder dialogBuilder = new android.support.v7.app.AlertDialog.Builder(AddClient.this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.open_add_client, null);
+        br.com.simplepass.loading_button_lib.customViews.CircularProgressButton okbtn = dialogView.findViewById(R.id.cirRegisterButton);
+        TextView tv=dialogView.findViewById(R.id.success);
+        tv.setText("Client is already follow up by:- "+name);
+        dialogBuilder.setView(dialogView);
+        dialogView.setBackgroundColor(Color.parseColor("#F0F8FF"));
+        b = dialogBuilder.create();
+        b.show();
+        okbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                b.dismiss();
+            }
+        });
     }
 
     public void showCustomLoadingDialog() {

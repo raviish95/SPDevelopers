@@ -60,8 +60,10 @@
         <activity
             android:name=".PropertiesListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".AddClientProperty"
+        <activity
+            android:name=".AddClientProperty"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MyEmpTeam"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

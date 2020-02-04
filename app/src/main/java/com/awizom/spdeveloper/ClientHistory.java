@@ -39,7 +39,7 @@ public class ClientHistory extends AppCompatActivity {
     String lct = "null";
     String clt = "null";
     String mob = "null";
-
+    String Empid="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +51,7 @@ public class ClientHistory extends AppCompatActivity {
     }
 
     private void Initview() {
+        Empid=getIntent().getStringExtra("Empid");
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Lead History");
         toolbar.setBackgroundColor(Color.parseColor("#488586"));
@@ -104,8 +105,29 @@ public class ClientHistory extends AppCompatActivity {
 
             }
         });*/
-        getClientlist();
+     if(!Empid.equals(""))
+     {
+         getClientlistby();
+     }
+     else {
+         getClientlist();
+     }
+    }
 
+    private void getClientlistby() {
+
+        try {
+            // Toast.makeText(getApplicationContext(), "deviceid->" + FirebaseInstanceId.getInstance().getToken(), Toast.LENGTH_LONG).show();
+            String result = new ClientHelper.GetClientList().execute(Empid.toString()).get();
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<ClientDetailModel>>() {
+            }.getType();
+            clientlist = new Gson().fromJson(result, listType);
+            adapterClientList = new ClientListAdapter(ClientHistory.this, clientlist);
+            recyclerView.setAdapter(adapterClientList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void getClientlist() {

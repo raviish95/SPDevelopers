@@ -59,7 +59,8 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     ProgressDialog progressDialog;
     SwipeRefreshLayout refresh;
     boolean connected = false;
-
+    NavigationView navigationView;
+    String teamleaderid="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,8 +112,31 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        GetLeaderOrNot();
+    }
+
+    private void GetLeaderOrNot() {
+
+        String empid = String.valueOf(SharedPrefManager.getInstance(this).getUser().getEmployeeID());
+        try {
+            // Toast.makeText(getApplicationContext(), "deviceid->" + FirebaseInstanceId.getInstance().getToken(), Toast.LENGTH_LONG).show();
+            teamleaderid = new ClientHelper.GetLeaderOrNot().execute(empid.toString()).get();
+            if (teamleaderid.isEmpty()) {
+                Toast.makeText(getApplicationContext(),teamleaderid,Toast.LENGTH_LONG).show();
+                teamleaderid = new ClientHelper.GetLeaderOrNot().execute(empid.toString()).get();
+            } else {
+                Toast.makeText(getApplicationContext(),teamleaderid,Toast.LENGTH_LONG).show();
+              if(teamleaderid.equals("0"))
+              {
+                  MenuItem item = navigationView.getMenu().findItem(R.id.nav_leader);
+                  item.setVisible(false);
+              }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void GetCheckFollowList() {
@@ -169,8 +193,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
             //we are connected to a network
-
-
             connected = true;
             getClientList();
             //    Toast.makeText(getApplicationContext(), "Internet is On", Toast.LENGTH_SHORT).show();
@@ -337,7 +359,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             showCustomLoadingDialog();
             Intent intent = new Intent(HomePage.this, FollowUpHistory.class);
             startActivity(intent);
-
+        }
+        else if (id == R.id.nav_leader) {
+            showCustomLoadingDialog();
+            Intent intent = new Intent(HomePage.this, MyEmpTeam.class);
+    /*        Toast.makeText(getApplicationContext(),teamleaderid,Toast.LENGTH_LONG).show();*/
+            intent.putExtra("TeamLeaderID",teamleaderid);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
