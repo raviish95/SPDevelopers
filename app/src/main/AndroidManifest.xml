@@ -63,6 +63,10 @@
         <activity
             android:name=".AddClientProperty"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".NotificationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MyEmpTeam"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

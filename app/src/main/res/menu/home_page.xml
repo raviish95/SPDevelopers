@@ -6,4 +6,11 @@
         android:orderInCategory="100"
         android:title="Log Out"
         app:showAsAction="never" />
+    <item  android:id="@+id/admin1"
+        android:icon="@drawable/notifications"
+        android:iconTint="@color/whiteTextColor"
+        app:actionLayout="@layout/custom_action_item_layout"
+        app:showAsAction="always"
+        android:visible="false"
+        android:title="vds"/>
 </menu>

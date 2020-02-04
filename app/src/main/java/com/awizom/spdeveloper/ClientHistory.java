@@ -39,19 +39,20 @@ public class ClientHistory extends AppCompatActivity {
     String lct = "null";
     String clt = "null";
     String mob = "null";
-    String Empid="";
+    String Empid = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client_history);
-        if(new InternetDialog(ClientHistory.this).getInternetStatus()){
+        if (new InternetDialog(ClientHistory.this).getInternetStatus()) {
             Initview();
             //   Toast.makeText(HomePage.this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void Initview() {
-        Empid=getIntent().getStringExtra("Empid");
+        Empid = getIntent().getStringExtra("Empid");
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Lead History");
         toolbar.setBackgroundColor(Color.parseColor("#488586"));
@@ -64,7 +65,7 @@ public class ClientHistory extends AppCompatActivity {
                 onBackPressed();
             }
         });
-      /*  leadfilt = (Spinner) findViewById(R.id.spinner);*/
+        /*  leadfilt = (Spinner) findViewById(R.id.spinner);*/
         Window window = this.getWindow();
 
 // clear FLAG_TRANSLUCENT_STATUS flag:
@@ -74,7 +75,7 @@ public class ClientHistory extends AppCompatActivity {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
 // finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(this,R.color.statusbar_color));
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbar_color));
         location = findViewById(R.id.location);
         client = findViewById(R.id.client);
         mobno = findViewById(R.id.mobno);
@@ -105,13 +106,16 @@ public class ClientHistory extends AppCompatActivity {
 
             }
         });*/
-     if(!Empid.equals(""))
-     {
-         getClientlistby();
-     }
-     else {
-         getClientlist();
-     }
+        try {
+            if (!Empid.equals("")) {
+                getClientlistby();
+            } else {
+                getClientlist();
+            }
+        } catch (Exception e) {
+            getClientlist();
+            e.printStackTrace();
+        }
     }
 
     private void getClientlistby() {
@@ -167,9 +171,9 @@ public class ClientHistory extends AppCompatActivity {
 
 
             } else {
-                lct="null";
-                clt="null";
-                mob="null";
+                lct = "null";
+                clt = "null";
+                mob = "null";
                 Gson gson = new Gson();
                 Type listType = new TypeToken<List<ClientDetailModel>>() {
                 }.getType();

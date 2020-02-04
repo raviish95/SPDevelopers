@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +37,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.awizom.spdeveloper.Adapter.ClientListAdapter;
@@ -59,8 +62,12 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     ProgressDialog progressDialog;
     SwipeRefreshLayout refresh;
     boolean connected = false;
+    TextView textCartItemCount;
+    int mCartItemCount = 10;
     NavigationView navigationView;
-    String teamleaderid="";
+    String teamleaderid = "";
+    private ImageView notification;
+    MenuItem menuItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +90,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             public void onRefresh() {
                 if (new InternetDialog(HomePage.this).getInternetStatus()) {
                     getClientList();
+                    GetLeaderOrNot();
                     //   Toast.makeText(HomePage.this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
                 }
                 refresh.setRefreshing(false);
@@ -111,10 +119,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        GetLeaderOrNot();
+
     }
 
     private void GetLeaderOrNot() {
@@ -124,19 +131,46 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             // Toast.makeText(getApplicationContext(), "deviceid->" + FirebaseInstanceId.getInstance().getToken(), Toast.LENGTH_LONG).show();
             teamleaderid = new ClientHelper.GetLeaderOrNot().execute(empid.toString()).get();
             if (teamleaderid.isEmpty()) {
-                Toast.makeText(getApplicationContext(),teamleaderid,Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), teamleaderid, Toast.LENGTH_LONG).show();
                 teamleaderid = new ClientHelper.GetLeaderOrNot().execute(empid.toString()).get();
             } else {
-                Toast.makeText(getApplicationContext(),teamleaderid,Toast.LENGTH_LONG).show();
-              if(teamleaderid.equals("0"))
-              {
-                  MenuItem item = navigationView.getMenu().findItem(R.id.nav_leader);
-                  item.setVisible(false);
-              }
+          /*      Toast.makeText(getApplicationContext(), teamleaderid, Toast.LENGTH_LONG).show();*/
+                if (teamleaderid.equals("0")) {
+                    MenuItem item = navigationView.getMenu().findItem(R.id.nav_leader);
+                    item.setVisible(false);
+
+                }
+                else{
+                    menuItem.setVisible(true);
+             GetNotiCount(teamleaderid);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void GetNotiCount(String tid) {
+        try {
+            String results = new ClientHelper.GetNotiCount().execute(tid.toString()).get();
+            // Toast.makeText(getApplicationContext(),result.toString(),Toast.LENGTH_LONG).show();
+            mCartItemCount = Integer.parseInt(results);
+            if (textCartItemCount != null) {
+                if (mCartItemCount == 0) {
+                    if (textCartItemCount.getVisibility() != View.GONE) {
+                        textCartItemCount.setVisibility(View.GONE);
+                    }
+                } else {
+                    textCartItemCount.setText(String.valueOf(Math.min(mCartItemCount, 99)));
+                    if (textCartItemCount.getVisibility() != View.VISIBLE) {
+                        textCartItemCount.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void GetCheckFollowList() {
@@ -265,8 +299,24 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home_page, menu);
+        menuItem = menu.findItem(R.id.admin1);
+        View actionView = MenuItemCompat.getActionView(menuItem);
+        textCartItemCount = (TextView) actionView.findViewById(R.id.cart_badge);
+        notification = (ImageView) actionView.findViewById(R.id.notification);
+        notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(HomePage.this, NotificationActivity.class);
+                intent.putExtra("TeamLID",teamleaderid);
+                startActivity(intent);
+            }
+        });
+        GetLeaderOrNot();
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -359,12 +409,11 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
             showCustomLoadingDialog();
             Intent intent = new Intent(HomePage.this, FollowUpHistory.class);
             startActivity(intent);
-        }
-        else if (id == R.id.nav_leader) {
+        } else if (id == R.id.nav_leader) {
             showCustomLoadingDialog();
             Intent intent = new Intent(HomePage.this, MyEmpTeam.class);
-    /*        Toast.makeText(getApplicationContext(),teamleaderid,Toast.LENGTH_LONG).show();*/
-            intent.putExtra("TeamLeaderID",teamleaderid);
+            /*        Toast.makeText(getApplicationContext(),teamleaderid,Toast.LENGTH_LONG).show();*/
+            intent.putExtra("TeamLeaderID", teamleaderid);
             startActivity(intent);
         }
 

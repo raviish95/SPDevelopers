@@ -492,7 +492,6 @@ public class ClientHelper extends AppCompatActivity {
 
 
     }
-
     public static final class GetFollowUpByFilterList extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
@@ -585,7 +584,6 @@ public class ClientHelper extends AppCompatActivity {
 
 
     }
-
     public static final class GetClientPropertyNameList extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
@@ -721,6 +719,138 @@ public class ClientHelper extends AppCompatActivity {
 
 
         }
+
+    }
+    public static final class GetNotiCount extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+
+            String json = "";
+            String tid = params[0];
+
+            try {
+                OkHttpClient client = new OkHttpClient();
+                Request.Builder builder = new Request.Builder();
+                builder.url(AppConfig.BASE_URL_API_ + "GetNotificationCount/"+tid);
+                builder.addHeader("Content-Type", "Application/json");
+                builder.addHeader("Accept", "application/json");
+
+                okhttp3.Response response = client.newCall(builder.build()).execute();
+                if (response.isSuccessful()) {
+                    json = response.body().string();
+                }
+            } catch (Exception e) {
+
+
+                e.printStackTrace();
+
+            }
+            return json;
+        }
+
+        protected void onPostExecute(String result) {
+
+            try {
+                if (result.isEmpty()) {
+
+                } else {
+                    super.onPostExecute(result);
+                }
+
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+    public static final class PostReadNotification extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+
+            //     InputStream inputStream
+            String notiId = params[0];
+
+            String json = "";
+            try {
+
+                OkHttpClient client = new OkHttpClient();
+                Request.Builder builder = new Request.Builder();
+                builder.url(AppConfig.BASE_URL_API_ + "PostReadNotification/"+notiId.toString());
+                builder.addHeader("Content-Type", "application/x-www-form-urlencoded");
+                builder.addHeader("Accept", "application/json");
+                //builder.addHeader("Authorization", "Bearer " + accesstoken);
+                FormBody.Builder parameters = new FormBody.Builder();
+
+                builder.post(parameters.build());
+                okhttp3.Response response = client.newCall(builder.build()).execute();
+                if (response.isSuccessful()) {
+                    json = response.body().string();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return json;
+        }
+
+        protected void onPostExecute(String result) {
+
+            if (result.isEmpty()) {
+
+            } else {
+                super.onPostExecute(result);
+//
+            }
+
+
+        }
+
+    }
+    public static final class GetNotificationList extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+
+            String json = "";
+            String tid = params[0];
+
+            try {
+                OkHttpClient client = new OkHttpClient();
+                Request.Builder builder = new Request.Builder();
+                builder.url(AppConfig.BASE_URL_API_ + "GetNotificationList/"+tid);
+                builder.addHeader("Content-Type", "Application/json");
+                builder.addHeader("Accept", "application/json");
+
+                okhttp3.Response response = client.newCall(builder.build()).execute();
+                if (response.isSuccessful()) {
+                    json = response.body().string();
+                }
+            } catch (Exception e) {
+
+
+                e.printStackTrace();
+
+            }
+            return json;
+        }
+
+        protected void onPostExecute(String result) {
+
+            try {
+                if (result.isEmpty()) {
+
+                } else {
+                    super.onPostExecute(result);
+                }
+
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
+        }
+
 
     }
 }
