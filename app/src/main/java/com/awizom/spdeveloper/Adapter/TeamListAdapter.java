@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.awizom.spdeveloper.ClientHistory;
@@ -45,21 +46,44 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.MyView
          holder.itemView.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
+                 holder.cardlinear.setBackgroundColor(Color.parseColor("#BCE8F5"));
+
+                 dismissmethod();
                  Intent intent=new Intent(mCtx, ClientHistory.class);
                  intent.putExtra("Empid",holder.emp_id.getText().toString());
                  mCtx.startActivity(intent);
+              dismisscolor(holder.cardlinear);
              }
          });
     }
 
-
-    private void dismissmethod() {
+    private void dismisscolor(final LinearLayout cardlinear) {
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                progressDialog.dismiss();
+                try {
+                    cardlinear.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                }
+                catch (Exception e)
+                {e.printStackTrace();}
+            }
+        }, 100);
+    }
+
+
+    private void dismissmethod() {
+        progressDialog.show();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    progressDialog.dismiss();
+                }
+                catch (Exception e)
+                {e.printStackTrace();}
             }
         }, 100);
     }
@@ -84,13 +108,17 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.MyView
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView emp_id, emp_name;
+        LinearLayout cardlinear;
 
         @RequiresApi(api = Build.VERSION_CODES.M)
         public MyViewHolder(View view) {
             super(view);
             progressDialog = new ProgressDialog(mCtx);
+            progressDialog.setMessage("Loading...");
             emp_id = view.findViewById(R.id.emp_id);
             emp_name = view.findViewById(R.id.emp_name);
+            cardlinear=view.findViewById(R.id.cardlinear);
+
         }
 
     }

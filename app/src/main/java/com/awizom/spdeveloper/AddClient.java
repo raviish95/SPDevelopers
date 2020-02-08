@@ -126,7 +126,6 @@ public class AddClient extends AppCompatActivity {
                         openConfirm(name);
                         Toast.makeText(getApplicationContext(), "Client is already follow up by-"+name, Toast.LENGTH_LONG).show();
                         submit.revertAnimation();
-
                     }
                     else {
 

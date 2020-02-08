@@ -66,7 +66,7 @@
                 android:autoLink="web"
                 android:gravity="start"
                 android:linksClickable="true"
-                android:text="http://spweb.jihuzzur.com/"
+                android:text="http://www.spdevelopercg.com/"
                 android:textColor="#FFFFFF"
                 android:textSize="10sp" />
         </RelativeLayout>

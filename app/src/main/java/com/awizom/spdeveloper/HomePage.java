@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -45,6 +46,7 @@ import com.awizom.spdeveloper.Adapter.ClientListAdapter;
 import com.awizom.spdeveloper.Helper.ClientHelper;
 import com.awizom.spdeveloper.Helper.ProfileHelper;
 import com.awizom.spdeveloper.Model.ClientDetailModel;
+import com.awizom.spdeveloper.Model.EmployeeDetailModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -68,6 +70,9 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
     String teamleaderid = "";
     private ImageView notification;
     MenuItem menuItem;
+    TextView name,uid;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +84,7 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         gridView = (GridView) findViewById(R.id.gridview);
         gridView.setAdapter(new GridImageAdapter(this));
         progressDialog = new ProgressDialog(this);
+
         recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -91,16 +97,13 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 if (new InternetDialog(HomePage.this).getInternetStatus()) {
                     getClientList();
                     GetLeaderOrNot();
+                    GetMyProfile();
                     //   Toast.makeText(HomePage.this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
                 }
                 refresh.setRefreshing(false);
             }
         });
-        if (new InternetDialog(this).getInternetStatus()) {
-            getClientList();
-            GetCheckFollowList();
-            // Toast.makeText(this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
-        }
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +124,37 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
         toggle.syncState();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+        name =  header.findViewById(R.id.name);
+        uid =  header.findViewById(R.id.uid);
+        if (new InternetDialog(this).getInternetStatus()) {
+            getClientList();
+            GetCheckFollowList();
+            GetMyProfile();
+            // Toast.makeText(this, "INTERNET VALIDATION PASSED", Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    private void GetMyProfile() {
+
+        String empid = String.valueOf(SharedPrefManager.getInstance(this).getUser().getEmployeeID());
+        try {
+            // Toast.makeText(getApplicationContext(), "deviceid->" + FirebaseInstanceId.getInstance().getToken(), Toast.LENGTH_LONG).show();
+           String response = new ClientHelper.GetMyProfile().execute(empid.toString()).get();
+            if (response.isEmpty()) {
+
+                response = new ClientHelper.GetMyProfile().execute(empid.toString()).get();
+            } else {
+                Type listype=new TypeToken<EmployeeDetailModel>(){}.getType();
+                EmployeeDetailModel cmodel=new Gson().fromJson(response, listype);
+                uid.setPaintFlags(uid.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                name.setPaintFlags(name.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                name.setText(cmodel.getEmployeeName().toString());
+                uid.setText(cmodel.getEmployeeNo());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void GetLeaderOrNot() {
@@ -138,7 +171,6 @@ public class HomePage extends AppCompatActivity implements NavigationView.OnNavi
                 if (teamleaderid.equals("0")) {
                     MenuItem item = navigationView.getMenu().findItem(R.id.nav_leader);
                     item.setVisible(false);
-
                 }
                 else{
                     menuItem.setVisible(true);

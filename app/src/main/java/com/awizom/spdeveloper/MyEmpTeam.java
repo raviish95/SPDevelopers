@@ -52,7 +52,7 @@ public class MyEmpTeam extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        Toast.makeText(getApplicationContext(), teamid, Toast.LENGTH_LONG).show();
+/*        Toast.makeText(getApplicationContext(), teamid, Toast.LENGTH_LONG).show();*/
         getEmployeeList();
     }
 
