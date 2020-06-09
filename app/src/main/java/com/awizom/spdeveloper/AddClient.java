@@ -59,7 +59,7 @@ public class AddClient extends AppCompatActivity {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
 // finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(this,R.color.statusbar_color));
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.statusbar_color));
         empid = String.valueOf(SharedPrefManager.getInstance(AddClient.this).getUser().getEmployeeID());
         name = findViewById(R.id.editTextName);
         email = findViewById(R.id.editTextEmail);
@@ -90,52 +90,50 @@ public class AddClient extends AppCompatActivity {
         if (name.getText().toString().isEmpty()) {
             name.setError("Please enter valid Name");
             name.requestFocus();
-        } else if (mobno.getText().toString().isEmpty() ||mobno.getText().toString().length()< 10 || mobno.getText().toString().length()> 10) {
+        } else if (mobno.getText().toString().isEmpty() || mobno.getText().toString().length() < 10 || mobno.getText().toString().length() > 10) {
             mobno.setError("Please enter valid Mobno");
             mobno.requestFocus();
-        }
-        else if(mobno.getText().toString().equals(altmobno.getText().toString()))
-        {
+        } else if (mobno.getText().toString().equals(altmobno.getText().toString())) {
             altmobno.setError("Please enter different alt mobno");
             altmobno.requestFocus();
-        }
-
-        else {
+        } else {
           /*  progressDialog.setMessage("Please wait");
             progressDialog.show();*/
             showCustomLoadingDialog();
             submit.startAnimation();
             try {
-                String altmobnos=altmobno.getText().toString();
-                if(altmobnos.equals(""))
-                {
-                    altmobnos="nullval";
+                String altmobnos = altmobno.getText().toString();
+                String emailstr = email.getText().toString();
+                String addres = address.getText().toString();
+                if (altmobnos.equals("")) {
+                    altmobnos = "no alt. no";
                 }
-                result = new ClientHelper.AddClient().execute(name.getText().toString(), email.getText().toString(), mobno.getText().toString(), altmobnos.toString(), address.getText().toString(), empid.toString()).get();
+                if (emailstr.equals("")) {
+                    emailstr = "noemail@example.com";
+                }
+                if (addres.equals("")) {
+                    addres = "no address";
+                }
+                result = new ClientHelper.AddClient().execute(name.getText().toString(), emailstr.toString(), mobno.getText().toString(), altmobnos.toString(), addres.toString(), empid.toString()).get();
                 if (result.isEmpty()) {
-                    result = new ClientHelper.AddClient().execute(name.getText().toString(), email.getText().toString(), mobno.getText().toString(), altmobnos.toString(), address.getText().toString(), empid.toString()).get();
-                }
-
-                else {
+                    result = new ClientHelper.AddClient().execute(name.getText().toString(), emailstr.toString(), mobno.getText().toString(), altmobnos.toString(), addres.toString(), empid.toString()).get();
+                } else {
                     Type listType = new TypeToken<LoginMobModel>() {
                     }.getType();
                     LoginMobModel loginModel = new Gson().fromJson(result, listType);
-                  if(loginModel.getRole().equals("exist"))
-                    {
-                        String name=loginModel.getName();
+                    if (loginModel.getRole().equals("exist")) {
+                        String name = loginModel.getName();
                         openConfirm(name);
-                        Toast.makeText(getApplicationContext(), "Client is already follow up by-"+name, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Client is already follow up by-" + name, Toast.LENGTH_LONG).show();
+                        submit.revertAnimation();
+                    } else {
+                        Toast.makeText(getApplicationContext(), " Success", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(AddClient.this, ClientPropertyDetail.class);
+                        intent.putExtra("ClientID", String.valueOf(result));
+                        startActivity(intent);
                         submit.revertAnimation();
                     }
-                    else {
-
-                      Toast.makeText(getApplicationContext(), " Success", Toast.LENGTH_LONG).show();
-                      Intent intent = new Intent(AddClient.this, ClientPropertyDetail.class);
-                      intent.putExtra("ClientID", String.valueOf(result));
-                      startActivity(intent);
-                      submit.revertAnimation();
-                  }
-                  /*  progressDialog.dismiss();*/
+                    /*  progressDialog.dismiss();*/
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -149,8 +147,8 @@ public class AddClient extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.open_add_client, null);
         br.com.simplepass.loading_button_lib.customViews.CircularProgressButton okbtn = dialogView.findViewById(R.id.cirRegisterButton);
-        TextView tv=dialogView.findViewById(R.id.success);
-        tv.setText("Client is already follow up by:- "+name);
+        TextView tv = dialogView.findViewById(R.id.success);
+        tv.setText("Client is already follow up by:- " + name);
         dialogBuilder.setView(dialogView);
         dialogView.setBackgroundColor(Color.parseColor("#F0F8FF"));
         b = dialogBuilder.create();

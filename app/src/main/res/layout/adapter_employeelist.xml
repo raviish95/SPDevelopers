@@ -14,20 +14,22 @@
         app:cardCornerRadius="10dp">
 
         <LinearLayout
+            android:id="@+id/cardlinear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:id="@+id/cardlinear"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/emp_Image"
+            <TextView
+                android:id="@+id/emp_count"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical|center"
                 android:layout_margin="10dp"
                 android:gravity="center"
-                android:src="@drawable/emp" />
+                android:text="1"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/emp_name"

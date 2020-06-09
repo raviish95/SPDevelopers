@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
 import com.awizom.spdeveloper.Adapter.NotificationListAdapter;
 import com.awizom.spdeveloper.Helper.ClientHelper;
 import com.awizom.spdeveloper.Model.NotificationModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.List;
 

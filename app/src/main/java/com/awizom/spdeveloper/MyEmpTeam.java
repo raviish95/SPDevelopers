@@ -5,7 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.awizom.spdeveloper.Adapter.PropertyListAdapter;
@@ -18,6 +21,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class MyEmpTeam extends AppCompatActivity {
@@ -26,7 +31,7 @@ public class MyEmpTeam extends AppCompatActivity {
     String teamid = "", result = "";
     List<TeamLeaderModel> teamLeaderModels;
     TeamListAdapter teamListAdapter;
-    android.support.v7.widget.Toolbar toolbar;
+    EditText searchBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,23 @@ public class MyEmpTeam extends AppCompatActivity {
         toolbar.setBackgroundColor(Color.parseColor("#488586"));
         toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
         setSupportActionBar(toolbar);
+        searchBox=findViewById(R.id.searchBox);
+        searchBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+               filter(s.toString());
+            }
+        });
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +78,24 @@ public class MyEmpTeam extends AppCompatActivity {
         getEmployeeList();
     }
 
+    void filter(String text){
+        List<TeamLeaderModel> temp = new ArrayList();
+        for(TeamLeaderModel d: teamLeaderModels){
+            //or use .equal(text) with you want equal match
+            //use .toLowerCase() for better matches
+            if(d.getEmployeeName().toLowerCase().contains(text.toLowerCase())){
+                temp.add(d);
+            }
+
+        }
+
+        //update recyclerview
+
+        teamListAdapter = new TeamListAdapter(MyEmpTeam.this, temp);
+        recyclerView.setAdapter(teamListAdapter);
+    }
+
+
     private void getEmployeeList() {
         try {
             result = new ClientHelper.GetEmployeeList().execute(teamid).get();
@@ -66,7 +106,10 @@ public class MyEmpTeam extends AppCompatActivity {
                 Type listType = new TypeToken<List<TeamLeaderModel>>() {
                 }.getType();
                 teamLeaderModels = new Gson().fromJson(result, listType);
+
                 teamListAdapter = new TeamListAdapter(MyEmpTeam.this, teamLeaderModels);
+
+
                 recyclerView.setAdapter(teamListAdapter);
             }
         } catch (Exception e) {

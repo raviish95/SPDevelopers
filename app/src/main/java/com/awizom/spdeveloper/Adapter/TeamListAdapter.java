@@ -41,20 +41,21 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.MyView
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         TeamLeaderModel c = teamLeaderModelList.get(position);
-         holder.emp_id.setText(String.valueOf(c.getEmployeeID()));
-         holder.emp_name.setText(String.valueOf(c.getEmployeeName()));
-         holder.itemView.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 holder.cardlinear.setBackgroundColor(Color.parseColor("#BCE8F5"));
-
-                 dismissmethod();
-                 Intent intent=new Intent(mCtx, ClientHistory.class);
-                 intent.putExtra("Empid",holder.emp_id.getText().toString());
-                 mCtx.startActivity(intent);
-              dismisscolor(holder.cardlinear);
-             }
-         });
+        int pos = position + 1;
+        holder.emp_id.setText(String.valueOf(c.getEmployeeID()));
+        holder.emp_name.setText(String.valueOf(c.getEmployeeName()));
+        holder.emp_count.setText(String.valueOf(pos));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.cardlinear.setBackgroundColor(Color.parseColor("#BCE8F5"));
+                dismissmethod();
+                Intent intent = new Intent(mCtx, ClientHistory.class);
+                intent.putExtra("Empid", holder.emp_id.getText().toString());
+                mCtx.startActivity(intent);
+                dismisscolor(holder.cardlinear);
+            }
+        });
     }
 
     private void dismisscolor(final LinearLayout cardlinear) {
@@ -65,9 +66,9 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.MyView
             public void run() {
                 try {
                     cardlinear.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                catch (Exception e)
-                {e.printStackTrace();}
             }
         }, 100);
     }
@@ -81,9 +82,9 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.MyView
             public void run() {
                 try {
                     progressDialog.dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                catch (Exception e)
-                {e.printStackTrace();}
             }
         }, 100);
     }
@@ -107,7 +108,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView emp_id, emp_name;
+        public TextView emp_id, emp_name, emp_count;
         LinearLayout cardlinear;
 
         @RequiresApi(api = Build.VERSION_CODES.M)
@@ -117,8 +118,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.MyView
             progressDialog.setMessage("Loading...");
             emp_id = view.findViewById(R.id.emp_id);
             emp_name = view.findViewById(R.id.emp_name);
-            cardlinear=view.findViewById(R.id.cardlinear);
-
+            cardlinear = view.findViewById(R.id.cardlinear);
+            emp_count = view.findViewById(R.id.emp_count);
         }
 
     }
